@@ -1,0 +1,26 @@
+From 0d060cf8e07f02d6099c9054987d588e57f627be Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 5 Jul 2025 16:39:56 +0800
+Subject: [PATCH 07/11] fs_mgr: Add apfs to supported fs list
+
+Change-Id: I1a0021146afc0a40842e7860de78148725f433d3
+---
+ fs_mgr/fs_mgr_roots.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs_mgr/fs_mgr_roots.cpp b/fs_mgr/fs_mgr_roots.cpp
+index a697fb3de4..79c2eeb602 100644
+--- a/fs_mgr/fs_mgr_roots.cpp
++++ b/fs_mgr/fs_mgr_roots.cpp
+@@ -116,7 +116,7 @@ bool TryPathMount(FstabEntry* rec, const std::string& mount_pt) {
+     }
+ 
+     static const std::vector<std::string> supported_fs{"ext4", "squashfs", "vfat", "exfat", "f2fs",
+-                                                       "erofs", "none"};
++                                                       "erofs", "none", "apfs"};
+     if (std::find(supported_fs.begin(), supported_fs.end(), rec->fs_type) == supported_fs.end()) {
+         LERROR << "unknown fs_type \"" << rec->fs_type << "\" for " << mount_point;
+         return false;
+-- 
+2.39.5
+

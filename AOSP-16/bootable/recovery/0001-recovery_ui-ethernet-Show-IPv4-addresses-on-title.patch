@@ -1,7 +1,7 @@
 From a7b40b1ed17a9e68202b0020bfd0d131f435767e Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 24 Jul 2024 06:08:01 +0800
-Subject: [PATCH 1/4] recovery_ui: ethernet: Show IPv4 addresses on title
+Subject: [PATCH 1/6] recovery_ui: ethernet: Show IPv4 addresses on title
 
 Change-Id: I50e9ea638211a13d68c51f00fa2c895889936e6f
 ---

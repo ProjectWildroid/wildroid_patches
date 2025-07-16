@@ -1,0 +1,32 @@
+From e4fab4d1b54a75d2186b32eb2a212e64f9d32e16 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Wed, 16 Jul 2025 20:33:59 +0000
+Subject: [PATCH 2/2] sepolicy: Allow recovery (minadbd) to use TCP and VSOCK
+ socket
+
+Change-Id: I916447fc71fab77ddf4c5ed24c75e31c5d258deb
+---
+ private/recovery.te | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/private/recovery.te b/private/recovery.te
+index 24dfd43a4..ac5946ab7 100644
+--- a/private/recovery.te
++++ b/private/recovery.te
+@@ -182,6 +182,13 @@ recovery_only(`
+   # Recovery uses liblogwrap to write fsck logs to kmsg, liblogwrap requires devpts.
+   allow recovery devpts:chr_file rw_file_perms;
+   allow recovery kmsg_device:chr_file { getattr w_file_perms };
++
++  # Minadbd networking support
++  allow recovery node:tcp_socket node_bind;
++  allow recovery port:tcp_socket name_bind;
++  allow recovery self:tcp_socket { create_socket_perms_no_ioctl listen accept };
++  allow recovery self:vsock_socket { create_socket_perms_no_ioctl listen accept };
++  get_prop(recovery, adbd_config_prop)
+ ')
+ 
+ ###
+-- 
+2.39.5
+
