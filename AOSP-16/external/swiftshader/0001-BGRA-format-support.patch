@@ -1,0 +1,51 @@
+From a74a95f9e38faff57239dd06b2599451eed771ca Mon Sep 17 00:00:00 2001
+From: Andrew Wolfers <aswolfers@google.com>
+Date: Wed, 7 May 2025 15:26:24 +0000
+Subject: [PATCH] BGRA format support
+
+This change adds conversions between Vulkan and AHardwareBuffer BGRA
+formats.
+
+Change-Id: If992c80438bf8386e0687c920e04015bab7bf394
+Reviewed-on: https://swiftshader-review.googlesource.com/c/SwiftShader/+/75488
+Reviewed-by: Jason Macnak <natsu@google.com>
+Commit-Queue: Jason Macnak <natsu@google.com>
+Tested-by: Jason Macnak <natsu@google.com>
+---
+ src/Vulkan/VkDeviceMemoryExternalAndroid.cpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/Vulkan/VkDeviceMemoryExternalAndroid.cpp b/src/Vulkan/VkDeviceMemoryExternalAndroid.cpp
+index ba91f33da..b7cdd0d88 100644
+--- a/src/Vulkan/VkDeviceMemoryExternalAndroid.cpp
++++ b/src/Vulkan/VkDeviceMemoryExternalAndroid.cpp
+@@ -57,6 +57,8 @@ uint32_t GetAHBFormatFromVkFormat(VkFormat format)
+ 		return AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420;
+ 	case VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16:
+ 		return AHARDWAREBUFFER_FORMAT_YCbCr_P010;
++	case VK_FORMAT_B8G8R8A8_UNORM:
++		return AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM;
+ 	default:
+ 		UNSUPPORTED("AHardwareBufferExternalMemory::VkFormat %d", int(format));
+ 		return 0;
+@@ -306,7 +308,7 @@ VkResult AHardwareBufferExternalMemory::lockAndroidHardwareBuffer(void **pBuffer
+ 		usage = AHARDWAREBUFFER_USAGE_CPU_READ_OFTEN | AHARDWAREBUFFER_USAGE_CPU_WRITE_OFTEN;
+ 	}
+ 
+-	// Empty fence, lock immedietly.
++	// Empty fence, lock immediately.
+ 	int32_t fence = -1;
+ 
+ 	// Empty rect, lock entire buffer.
+@@ -388,6 +390,8 @@ VkFormat AHardwareBufferExternalMemory::GetVkFormatFromAHBFormat(uint32_t ahbFor
+ 		return VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM;
+ 	case AHARDWAREBUFFER_FORMAT_YCbCr_P010:
+ 		return VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16;
++	case AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM:
++		return VK_FORMAT_B8G8R8A8_UNORM;
+ 	default:
+ 		UNSUPPORTED("AHardwareBufferExternalMemory::AHardwareBuffer_Format %d", int(ahbFormat));
+ 		return VK_FORMAT_UNDEFINED;
+-- 
+2.39.5
+
