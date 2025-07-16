@@ -1,7 +1,8 @@
 From 19252cf56d04bdccad61521022ed5fa21d079324 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 17 Jul 2025 00:11:12 +0800
-Subject: [PATCH] build: Include vendor/wildroid/config/BoardConfigWildroid.mk
+Subject: [PATCH 1/2] build: Include
+ vendor/wildroid/config/BoardConfigWildroid.mk
 
 Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
 ---

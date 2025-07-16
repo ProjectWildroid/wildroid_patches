@@ -1,0 +1,36 @@
+From 49b54dd9461e4b95408ddca0a93ca2c3fb6ee931 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Wed, 16 Jul 2025 21:37:38 +0000
+Subject: [PATCH 2/2] Inherit vendor/extra if exists
+
+Change-Id: I3461e6de5601a2fc24bb5abe4ef038346f688b65
+---
+ core/board_config.mk          | 1 +
+ target/product/base_system.mk | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/core/board_config.mk b/core/board_config.mk
+index cf01c8416c..5f1eec9a58 100644
+--- a/core/board_config.mk
++++ b/core/board_config.mk
+@@ -242,6 +242,7 @@ endif
+ $(call dump-phase-start,BOARD,,,, build/make/core/board_config.mk)
+ ifndef RBC_PRODUCT_CONFIG
+ include $(board_config_mk)
++-include vendor/extra/BoardConfigExtra.mk
+ else
+   $(shell mkdir -p $(OUT_DIR)/rbc)
+   $(call dump-variables-rbc, $(OUT_DIR)/rbc/make_vars_pre_board_config.mk)
+diff --git a/target/product/base_system.mk b/target/product/base_system.mk
+index 5c4ef33284..a24c9eba9e 100644
+--- a/target/product/base_system.mk
++++ b/target/product/base_system.mk
+@@ -582,3 +582,5 @@ $(call soong_config_set, appsearch, enable_isolated_storage, $(RELEASE_APPSEARCH
+ 
+ # Enable AppSearch Isolated Storage per BUILD flag
+ PRODUCT_PRODUCT_PROPERTIES += ro.appsearch.feature.enable_isolated_storage=$(RELEASE_APPSEARCH_ENABLE_ISOLATED_STORAGE)
++
++$(call inherit-product-if-exists, vendor/extra/product.mk)
+-- 
+2.39.5
+
