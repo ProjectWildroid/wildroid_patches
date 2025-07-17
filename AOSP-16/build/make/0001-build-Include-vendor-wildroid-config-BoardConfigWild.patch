@@ -1,7 +1,7 @@
-From 19252cf56d04bdccad61521022ed5fa21d079324 Mon Sep 17 00:00:00 2001
+From 0f6d61b42a90927668e5bfff694a3dc631f84cc4 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 17 Jul 2025 00:11:12 +0800
-Subject: [PATCH 1/2] build: Include
+Subject: [PATCH 1/4] build: Include
  vendor/wildroid/config/BoardConfigWildroid.mk
 
 Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
@@ -10,7 +10,7 @@ Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
  1 file changed, 2 insertions(+)
 
 diff --git a/core/config.mk b/core/config.mk
-index 38f3f5b802..b843b3899d 100644
+index 1474d0fc2c..23064441eb 100644
 --- a/core/config.mk
 +++ b/core/config.mk
 @@ -471,6 +471,8 @@ endif
