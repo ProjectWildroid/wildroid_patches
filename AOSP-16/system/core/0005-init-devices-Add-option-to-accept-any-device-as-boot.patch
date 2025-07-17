@@ -1,7 +1,7 @@
-From 659f9fcc65493fdf21fe539e391d32bc3aa9484c Mon Sep 17 00:00:00 2001
+From f83a83451de56759a21e3cc7dbe3aa79bd8ae479 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 2 Jan 2024 07:34:14 +0800
-Subject: [PATCH 06/15] init: devices: Add option to accept any device as boot
+Subject: [PATCH 05/13] init: devices: Add option to accept any device as boot
  device
 
 Targets like PCs/VMs usually don't have fixed boot devices.

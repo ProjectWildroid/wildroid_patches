@@ -1,7 +1,7 @@
-From d074dcd5b62787d93f4461f384718b419e7b4d0a Mon Sep 17 00:00:00 2001
+From a1d711a7f82848264da86aafd85e9337c15f1707 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 17:57:10 +0800
-Subject: [PATCH 12/15] Add support for mounting partition image in first stage
+Subject: [PATCH 11/13] Add support for mounting partition image in first stage
  mount
 
 Change-Id: I4aaec7e838ef6009ddf76439e77e1b634abb7345
@@ -179,7 +179,7 @@ index c54c21eb87..06182d8880 100644
  
      if (fstab.empty()) {
 diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
-index ab9482b4ee..903ebd7034 100644
+index 0647ef7c11..e12580e01f 100644
 --- a/init/first_stage_mount.cpp
 +++ b/init/first_stage_mount.cpp
 @@ -440,6 +440,8 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
@@ -191,7 +191,7 @@ index ab9482b4ee..903ebd7034 100644
      if (begin->fs_mgr_flags.logical) {
          if (!fs_mgr_update_logical_partition(&(*begin))) {
              return false;
-@@ -550,6 +552,15 @@ bool FirstStageMountVBootV2::TrySwitchSystemAsRoot() {
+@@ -555,6 +557,15 @@ bool FirstStageMountVBootV2::TrySwitchSystemAsRoot() {
      return true;
  }
  
@@ -207,7 +207,7 @@ index ab9482b4ee..903ebd7034 100644
  static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
      std::optional<std::string> microdroid_vendor_block_dev;
      for (auto entry = fstab->begin(); entry != fstab->end(); entry++) {
-@@ -584,7 +595,7 @@ static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
+@@ -589,7 +600,7 @@ static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
  }
  
  bool FirstStageMountVBootV2::MountPartitions() {
@@ -216,7 +216,7 @@ index ab9482b4ee..903ebd7034 100644
  
      if (IsMicrodroid() && android::virtualization::IsOpenDiceChangesFlagEnabled()) {
          if (!MaybeDeriveMicrodroidVendorDiceNode(&fstab_)) {
-@@ -595,8 +606,11 @@ bool FirstStageMountVBootV2::MountPartitions() {
+@@ -600,8 +611,11 @@ bool FirstStageMountVBootV2::MountPartitions() {
      if (!SkipMountingPartitions(&fstab_, true /* verbose */)) return false;
  
      for (auto current = fstab_.begin(); current != fstab_.end();) {
@@ -229,7 +229,7 @@ index ab9482b4ee..903ebd7034 100644
              ++current;
              continue;
          }
-@@ -767,7 +781,10 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
+@@ -772,7 +786,10 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
              // Don't try to find logical partitions via uevent regeneration.
              logical_partitions.emplace(basename(fstab_entry.blk_device.c_str()));
          } else {

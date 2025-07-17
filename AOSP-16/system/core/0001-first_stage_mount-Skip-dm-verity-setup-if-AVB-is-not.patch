@@ -1,30 +1,36 @@
-From a3e43829e41eb79c169b699392ddaf8f8cf757cc Mon Sep 17 00:00:00 2001
+From fa8088725e78c97c9f912cb294d968649dccd445 Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
 Date: Tue, 4 Oct 2022 12:41:16 +0000
-Subject: [PATCH 01/15] first_stage_mount: Skip dm-verity setup if AVB is not
+Subject: [PATCH 01/13] first_stage_mount: Skip dm-verity setup if AVB is not
  enabled
 
 Change-Id: Ia06e94e91cf5fdce14ce37eb85fdd95df1d059bc
 ---
- init/first_stage_mount.cpp | 5 +++++
- 1 file changed, 5 insertions(+)
+ init/first_stage_mount.cpp | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
-index 6b413f6d65..ab9482b4ee 100644
+index 6b413f6d65..0647ef7c11 100644
 --- a/init/first_stage_mount.cpp
 +++ b/init/first_stage_mount.cpp
-@@ -806,6 +806,11 @@ bool IsHashtreeDisabled(const AvbHandle& vbmeta, const std::string& mount_point)
- bool FirstStageMountVBootV2::SetUpDmVerity(FstabEntry* fstab_entry) {
-     AvbHashtreeResult hashtree_result;
- 
-+    if (!fstab_entry->fs_mgr_flags.avb) {
-+        LOG(INFO) << "AVB is not enabled, skip dm-verity setup for " << fstab_entry->mount_point;
-+        return true;
-+    }
+@@ -448,9 +448,14 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
+             return false;
+         }
+     }
+-    if (!SetUpDmVerity(&(*begin))) {
+-        PLOG(ERROR) << "Failed to setup verity for '" << begin->mount_point << "'";
+-        return false;
 +
-     // It's possible for a fstab_entry to have both avb_keys and avb flag.
-     // In this case, try avb_keys first, then fallback to avb flag.
-     if (!fstab_entry->avb_keys.empty()) {
++    if (begin->fs_mgr_flags.avb) {
++        if (!SetUpDmVerity(&(*begin))) {
++            PLOG(ERROR) << "Failed to setup verity for '" << begin->mount_point << "'";
++            return false;
++        }
++    } else {
++        LOG(INFO) << "AVB is not enabled, skip verity setup for '" << begin->mount_point << "'";
+     }
+ 
+     bool mounted = (fs_mgr_do_mount_one(*begin) == 0);
 -- 
 2.39.5
 

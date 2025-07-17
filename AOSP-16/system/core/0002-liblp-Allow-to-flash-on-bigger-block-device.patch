@@ -1,15 +1,31 @@
-From ba1f641b4802888d4cdc8cc563617ada60cf081d Mon Sep 17 00:00:00 2001
+From a4c024ff963860c990c503b57141de79f27de48e Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
 Date: Sat, 16 Jul 2022 20:10:52 +0000
-Subject: [PATCH 03/15] liblp: Allow to flash on bigger block device
+Subject: [PATCH 02/13] liblp: Allow to flash on bigger block device
 
 Needed for using Retrofit Dynamic Partitions on unified targets, which has different partition sizes on different devices.
 
 Change-Id: I2b4c05401569ce5fc301ebafa7d130c3b0d87c64
 ---
- fs_mgr/liblp/writer.cpp | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs_mgr/liblp/builder.cpp | 4 ++--
+ fs_mgr/liblp/writer.cpp  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/fs_mgr/liblp/builder.cpp b/fs_mgr/liblp/builder.cpp
+index 4e6e97b675..6053e97d34 100644
+--- a/fs_mgr/liblp/builder.cpp
++++ b/fs_mgr/liblp/builder.cpp
+@@ -1043,8 +1043,8 @@ bool MetadataBuilder::UpdateBlockDeviceInfo(size_t index, const BlockDeviceInfo&
+     CHECK(index < block_devices_.size());
+ 
+     LpMetadataBlockDevice& block_device = block_devices_[index];
+-    if (device_info.size != block_device.size) {
+-        LERROR << "Device size does not match (got " << device_info.size << ", expected "
++    if (device_info.size < block_device.size) {
++        LERROR << "Device size does not fit (got " << device_info.size << ", expected "
+                << block_device.size << ")";
+         return false;
+     }
 diff --git a/fs_mgr/liblp/writer.cpp b/fs_mgr/liblp/writer.cpp
 index 2708efa156..7db0b787e4 100644
 --- a/fs_mgr/liblp/writer.cpp
