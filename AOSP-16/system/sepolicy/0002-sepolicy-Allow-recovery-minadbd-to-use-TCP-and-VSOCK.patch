@@ -1,7 +1,7 @@
 From 6e08c60c4eb6cf60769434fc04643c78e7051ea6 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 16 Jul 2025 20:33:59 +0000
-Subject: [PATCH 2/3] sepolicy: Allow recovery (minadbd) to use TCP and VSOCK
+Subject: [PATCH 2/4] sepolicy: Allow recovery (minadbd) to use TCP and VSOCK
  socket
 
 Change-Id: I916447fc71fab77ddf4c5ed24c75e31c5d258deb

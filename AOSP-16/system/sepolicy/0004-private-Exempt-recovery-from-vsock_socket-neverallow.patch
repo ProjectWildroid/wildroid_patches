@@ -1,0 +1,25 @@
+From 1df10d3e2c98a5be63f4f99b287e1572e7f2c96f Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 17 Jul 2025 23:46:20 +0800
+Subject: [PATCH 4/4] private: Exempt recovery from vsock_socket neverallow
+
+Change-Id: I13509b8d91dd6587b1c40702c2facf4d130c1236
+---
+ private/domain.te | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/private/domain.te b/private/domain.te
+index 6999586ea..2364289be 100644
+--- a/private/domain.te
++++ b/private/domain.te
+@@ -2334,5 +2334,7 @@ neverallow {
+     -hal_keymint_system # TODO: get connections from virtmanager
+     -hal_widevine_system # TODO: get connections from virtmanager
+     -vmlauncher_app     # TODO: get connections from virtmanager
++
++    -recovery
+ } *:vsock_socket { connect create accept bind };
+ ')
+-- 
+2.39.5
+
