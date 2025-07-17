@@ -1,0 +1,28 @@
+From 1e405b4c730ed1a8470e60a7a7d73861c53ebefe Mon Sep 17 00:00:00 2001
+From: me-cafebabe <me.cafebabe@gmail.com>
+Date: Mon, 20 Mar 2023 20:01:50 +0800
+Subject: [PATCH 3/3] Add property to disable APCF extended features
+
+* Required for change I4b1764b7551150e78dd8e2dfc99a6472c1293c2b
+
+Change-Id: I895c7c81b55eff7137b6c558e3a66d57f2406a30
+---
+ private/property_contexts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/private/property_contexts b/private/property_contexts
+index d01c31a86..d4afb1e89 100644
+--- a/private/property_contexts
++++ b/private/property_contexts
+@@ -674,6 +674,8 @@ bluetooth.core.le_audio.codec_extension_aidl.enabled u:object_r:bluetooth_config
+ bluetooth.device.default_name                        u:object_r:bluetooth_config_prop:s0 exact string
+ bluetooth.device.class_of_device                     u:object_r:bluetooth_config_prop:s0 exact string
+ 
++bluetooth.le.disable_apcf_extended_features          u:object_r:bluetooth_config_prop:s0 exact bool
++
+ bluetooth.profile.a2dp.sink.enabled                  u:object_r:bluetooth_config_prop:s0 exact bool
+ bluetooth.profile.a2dp.source.enabled                u:object_r:bluetooth_config_prop:s0 exact bool
+ bluetooth.profile.asha.central.enabled               u:object_r:bluetooth_config_prop:s0 exact bool
+-- 
+2.39.5
+
