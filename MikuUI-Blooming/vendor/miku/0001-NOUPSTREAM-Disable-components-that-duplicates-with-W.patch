@@ -1,0 +1,57 @@
+From 1429da632fe2c32731349ebfc51fc85b284a2c60 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 17 Jul 2025 10:28:17 +0000
+Subject: [PATCH] NOUPSTREAM: Disable components that duplicates with Wildroid
+
+Change-Id:
+---
+ build/soong/mkdir/init.go | 2 +-
+ build/tasks/kernel.mk     | 2 ++
+ config/BoardConfigMiku.mk | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/build/soong/mkdir/init.go b/build/soong/mkdir/init.go
+index c866454..b07d391 100644
+--- a/build/soong/mkdir/init.go
++++ b/build/soong/mkdir/init.go
+@@ -25,5 +25,5 @@ func init() {
+ }
+ 
+ func RegisterBuildComponents(ctx android.RegistrationContext) {
+-	ctx.RegisterModuleType("mkdir", MkdirFactory)
++	ctx.RegisterModuleType("mkdir_orig", MkdirFactory)
+ }
+diff --git a/build/tasks/kernel.mk b/build/tasks/kernel.mk
+index c030553..cd49032 100644
+--- a/build/tasks/kernel.mk
++++ b/build/tasks/kernel.mk
+@@ -72,6 +72,7 @@
+ #   TARGET_MERGE_DTBS_WILDCARD         = Optional, limits the .dtb files used to generate the
+ #                                          final DTB image when using QCOM's merge_dtbs script.
+ 
++ifeq (0,1) # Disable this file to use the one from Wildroid instead
+ ifneq ($(TARGET_PROVIDES_KERNEL_MAKEFILE),true)
+ ifneq ($(TARGET_NO_KERNEL),true)
+ 
+@@ -641,3 +642,4 @@ dtbimage: $(INSTALLED_DTBIMAGE_TARGET)
+ 
+ endif # TARGET_NO_KERNEL
+ endif # TARGET_PROVIDES_KERNEL_MAKEFILE
++endif
+diff --git a/config/BoardConfigMiku.mk b/config/BoardConfigMiku.mk
+index 33e0fbd..b12dd3a 100644
+--- a/config/BoardConfigMiku.mk
++++ b/config/BoardConfigMiku.mk
+@@ -5,7 +5,8 @@
+ #
+ 
+ # Kernel
+-include vendor/miku/config/BoardConfigKernel.mk
++# Disable this file to use the one from Wildroid instead
++#include vendor/miku/config/BoardConfigKernel.mk
+ 
+ # Qcom-specific bits
+ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+-- 
+2.39.5
+
