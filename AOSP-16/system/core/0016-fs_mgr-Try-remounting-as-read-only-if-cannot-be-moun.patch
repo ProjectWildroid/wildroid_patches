@@ -1,4 +1,4 @@
-From 109896e6388bc64eb02126fd039912067e0166c8 Mon Sep 17 00:00:00 2001
+From 609a9b23f7a24f24222d1359730aad30be19bd67 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:37:46 +0800
 Subject: [PATCH 16/17] fs_mgr: Try remounting as read-only if cannot be
@@ -10,7 +10,7 @@ Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 36183cca7d..32d2cf71cc 100644
+index 36183cca7d..efbc726651 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
 @@ -829,6 +829,7 @@ static int __mount(const std::string& source, const std::string& target, const F
@@ -25,7 +25,7 @@ index 36183cca7d..32d2cf71cc 100644
          } else {
              checkpoint_opts = "";
          }
-+        if (try_readonly) mountflags |= MS_RDONLY;
++        if (try_readonly && (save_errno == EACCES || save_errno == EROFS)) mountflags |= MS_RDONLY;
          opts = entry.fs_options + checkpoint_opts;
          if (save_errno == EAGAIN) {
              PINFO << "Retrying mount (source=" << source << ",target=" << target

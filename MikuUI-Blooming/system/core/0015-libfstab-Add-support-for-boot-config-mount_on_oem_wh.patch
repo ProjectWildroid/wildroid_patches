@@ -1,4 +1,4 @@
-From 4b12cfc23aa65d363ff7a93fe22b9742a63cb741 Mon Sep 17 00:00:00 2001
+From f759c3b14876e999a499fcb5496dc2f63bec8f48 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:10:01 +0800
 Subject: [PATCH 15/15] libfstab: Add support for boot config
