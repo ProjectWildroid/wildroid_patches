@@ -1,0 +1,61 @@
+From 366bd61001fcf58158f0234d7ac80b971e0242a6 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sun, 22 Sep 2024 03:45:11 +0800
+Subject: [PATCH 06/11] recovery_ui: Make use of more keys on keyboard
+
+Change-Id: If7c0d0e55b9b0e8901dbb5ef9682adffa3550f89
+---
+ recovery_ui/device.cpp    | 5 +++++
+ recovery_ui/screen_ui.cpp | 6 ++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/recovery_ui/device.cpp b/recovery_ui/device.cpp
+index e950ea65..0909cd52 100644
+--- a/recovery_ui/device.cpp
++++ b/recovery_ui/device.cpp
+@@ -141,8 +141,10 @@ int Device::HandleMenuKey(int key, bool visible) {
+     case BTN_DPAD_UP:
+       return kHighlightUp;
+ 
++    case KEY_PAGEUP:
+     case KEY_SCROLLUP:
+       return kScrollUp;
++    case KEY_PAGEDOWN:
+     case KEY_SCROLLDOWN:
+       return kScrollDown;
+ 
+@@ -156,10 +158,13 @@ int Device::HandleMenuKey(int key, bool visible) {
+ 
+     case KEY_HOME:
+     case KEY_HOMEPAGE:
++    case KEY_LEFTMETA:
++    case KEY_RIGHTMETA:
+       return kGoHome;
+ 
+     case KEY_BACKSPACE:
+     case KEY_BACK:
++    case KEY_ESC:
+       return kGoBack;
+ 
+     case KEY_AGAIN:
+diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
+index 52e2c993..5879df79 100644
+--- a/recovery_ui/screen_ui.cpp
++++ b/recovery_ui/screen_ui.cpp
+@@ -1251,9 +1251,11 @@ void ScreenRecoveryUI::ShowFile(FILE* fp) {
+           continue;
+         }
+         if (evt.key() == KEY_POWER || evt.key() == KEY_ENTER || evt.key() == KEY_BACKSPACE ||
+-            evt.key() == KEY_BACK || evt.key() == KEY_HOME || evt.key() == KEY_HOMEPAGE) {
++            evt.key() == KEY_BACK || evt.key() == KEY_HOME || evt.key() == KEY_HOMEPAGE ||
++            evt.key() == KEY_ESC || evt.key() == KEY_LEFTMETA || evt.key() == KEY_RIGHTMETA) {
+           return;
+-        } else if (evt.key() == KEY_UP || evt.key() == KEY_VOLUMEUP || evt.key() == KEY_SCROLLUP) {
++        } else if (evt.key() == KEY_UP || evt.key() == KEY_VOLUMEUP || evt.key() == KEY_SCROLLUP ||
++                   evt.key() == KEY_PAGEUP) {
+           if (offsets.size() <= 1) {
+             show_prompt = true;
+           } else {
+-- 
+2.39.5
+

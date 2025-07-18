@@ -1,7 +1,7 @@
-From 2361b1d3cd7307ea3731bfb5fa67db22b5512382 Mon Sep 17 00:00:00 2001
+From f7337ebca09f1d1669c5fef4933a07ff3bc892be Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 23 May 2024 04:24:40 +0800
-Subject: [PATCH 3/5] init.rc: Always enable console and run as root
+Subject: [PATCH 03/11] init.rc: Always enable console and run as root
 
 Change-Id: I73ce89744aa40be9b7d9ea7c7a303d52689bb82b
 ---

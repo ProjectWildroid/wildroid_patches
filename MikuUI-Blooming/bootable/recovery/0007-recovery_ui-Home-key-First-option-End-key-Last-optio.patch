@@ -1,0 +1,79 @@
+From 875dac6d2d492014048ed52909d9770b372b93f6 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sun, 22 Sep 2024 03:39:37 +0800
+Subject: [PATCH 07/11] recovery_ui: Home key = First option, End key = Last
+ option
+
+Change-Id: Ie219aa46cc884b076af54c5c69bfa678dcbde2cc
+---
+ recovery_ui/device.cpp                   | 6 +++++-
+ recovery_ui/include/recovery_ui/device.h | 2 ++
+ recovery_ui/screen_ui.cpp                | 8 +++++++-
+ 3 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/recovery_ui/device.cpp b/recovery_ui/device.cpp
+index 0909cd52..a0f20127 100644
+--- a/recovery_ui/device.cpp
++++ b/recovery_ui/device.cpp
+@@ -141,6 +141,11 @@ int Device::HandleMenuKey(int key, bool visible) {
+     case BTN_DPAD_UP:
+       return kHighlightUp;
+ 
++    case KEY_HOME:
++      return kHighlightFirst;
++    case KEY_END:
++      return kHighlightLast;
++
+     case KEY_PAGEUP:
+     case KEY_SCROLLUP:
+       return kScrollUp;
+@@ -156,7 +161,6 @@ int Device::HandleMenuKey(int key, bool visible) {
+     case BTN_START:
+       return kInvokeItem;
+ 
+-    case KEY_HOME:
+     case KEY_HOMEPAGE:
+     case KEY_LEFTMETA:
+     case KEY_RIGHTMETA:
+diff --git a/recovery_ui/include/recovery_ui/device.h b/recovery_ui/include/recovery_ui/device.h
+index 3a5fddd6..7517c44b 100644
+--- a/recovery_ui/include/recovery_ui/device.h
++++ b/recovery_ui/include/recovery_ui/device.h
+@@ -41,6 +41,8 @@ class Device {
+   static constexpr const int kScrollUp = -8;
+   static constexpr const int kScrollDown = -9;
+   static constexpr const int kRefresh = -10;
++  static constexpr const int kHighlightFirst = -11;
++  static constexpr const int kHighlightLast = -12;
+ 
+   // ENTER vs REBOOT: The latter will trigger a reboot that goes through bootloader, which allows
+   // using a new bootloader / recovery image if applicable. For example, REBOOT_RESCUE goes from
+diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
+index 5879df79..9948bcc3 100644
+--- a/recovery_ui/screen_ui.cpp
++++ b/recovery_ui/screen_ui.cpp
+@@ -1251,7 +1251,7 @@ void ScreenRecoveryUI::ShowFile(FILE* fp) {
+           continue;
+         }
+         if (evt.key() == KEY_POWER || evt.key() == KEY_ENTER || evt.key() == KEY_BACKSPACE ||
+-            evt.key() == KEY_BACK || evt.key() == KEY_HOME || evt.key() == KEY_HOMEPAGE ||
++            evt.key() == KEY_BACK || evt.key() == KEY_HOMEPAGE ||
+             evt.key() == KEY_ESC || evt.key() == KEY_LEFTMETA || evt.key() == KEY_RIGHTMETA) {
+           return;
+         } else if (evt.key() == KEY_UP || evt.key() == KEY_VOLUMEUP || evt.key() == KEY_SCROLLUP ||
+@@ -1454,6 +1454,12 @@ size_t ScreenRecoveryUI::ShowMenu(std::unique_ptr<Menu>&& menu, bool menu_only,
+         case Device::kHighlightDown:
+           selected = SelectMenu(++selected);
+           break;
++        case Device::kHighlightFirst:
++          selected = SelectMenu(0);
++          break;
++        case Device::kHighlightLast:
++          selected = SelectMenu(menu_->ItemsCount() - 1);
++          break;
+         case Device::kScrollUp:
+           selected = ScrollMenu(-1);
+           break;
+-- 
+2.39.5
+

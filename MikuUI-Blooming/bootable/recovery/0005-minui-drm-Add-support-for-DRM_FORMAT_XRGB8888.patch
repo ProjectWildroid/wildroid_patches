@@ -1,7 +1,7 @@
-From 2e1ff42cf63eb072a876dd93b9c7c30f20fd20e8 Mon Sep 17 00:00:00 2001
+From 35eaa56321975037484d78a8566f27468cfd107d Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 8 Aug 2024 19:06:45 +0800
-Subject: [PATCH 5/5] minui: drm: Add support for DRM_FORMAT_XRGB8888
+Subject: [PATCH 05/11] minui: drm: Add support for DRM_FORMAT_XRGB8888
 
 * Used for VMSVGA graphics card in VirtualBox and VMware.
 * It looks like vmwgfx_kms.c handles 4 formats: ARGB8888, XRGB8888,
