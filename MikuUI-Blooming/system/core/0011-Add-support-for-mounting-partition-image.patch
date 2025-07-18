@@ -1,21 +1,20 @@
-From 21abe380450b7673575bbd68a17f87fb8fe6b2bb Mon Sep 17 00:00:00 2001
+From 564646a0c05e668e3b5ba48563e468f215eb8c26 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 17:57:10 +0800
-Subject: [PATCH 13/17] Add support for mounting partition image in first stage
- mount
+Subject: [PATCH 11/17] Add support for mounting partition image
 
 Change-Id: I4aaec7e838ef6009ddf76439e77e1b634abb7345
 ---
- fs_mgr/fs_mgr.cpp                         | 37 ++++++++++++++++++++
+ fs_mgr/fs_mgr.cpp                         | 39 +++++++++++++++++++++
  fs_mgr/include/fs_mgr.h                   |  1 +
  fs_mgr/libdm/include/libdm/loop_control.h |  3 ++
  fs_mgr/libdm/loop_control.cpp             | 42 +++++++++++++++++++++++
  fs_mgr/libfstab/fstab.cpp                 |  2 +-
- init/first_stage_mount.cpp                | 23 +++++++++++--
+ init/first_stage_mount.cpp                | 21 ++++++++++--
  6 files changed, 104 insertions(+), 4 deletions(-)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 204e690936..05706d8501 100644
+index 204e690936..07b6df712d 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
 @@ -1121,6 +1121,43 @@ static bool call_vdc(const std::vector<std::string>& args, int* ret) {
@@ -62,6 +61,15 @@ index 204e690936..05706d8501 100644
  bool fs_mgr_update_logical_partition(FstabEntry* entry) {
      // Logical partitions are specified with a named partition rather than a
      // block device, so if the block device is a path, then it has already
+@@ -1531,6 +1568,8 @@ int fs_mgr_mount_all(Fstab* fstab, int mount_mode) {
+             }
+         }
+ 
++        fs_mgr_update_partition_image(&current_entry);
++
+         if (current_entry.fs_mgr_flags.logical) {
+             if (!fs_mgr_update_logical_partition(&current_entry)) {
+                 LERROR << "Could not set up logical partition, skipping!";
 diff --git a/fs_mgr/include/fs_mgr.h b/fs_mgr/include/fs_mgr.h
 index 79690874e2..133db2deb4 100644
 --- a/fs_mgr/include/fs_mgr.h
@@ -179,7 +187,7 @@ index a1f2ffffa1..0eb438dc12 100644
  
      if (fstab.empty()) {
 diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
-index 0647ef7c11..e12580e01f 100644
+index 849ea75c73..e12580e01f 100644
 --- a/init/first_stage_mount.cpp
 +++ b/init/first_stage_mount.cpp
 @@ -440,6 +440,8 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
@@ -229,18 +237,16 @@ index 0647ef7c11..e12580e01f 100644
              ++current;
              continue;
          }
-@@ -772,7 +786,10 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
+@@ -772,7 +786,8 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
              // Don't try to find logical partitions via uevent regeneration.
              logical_partitions.emplace(basename(fstab_entry.blk_device.c_str()));
          } else {
--            devices->emplace(basename(fstab_entry.blk_device.c_str()));
+-            if (fstab_entry.fs_type != "none") {
 +            if (fstab_entry.fs_type != "none" &&
 +                !android::base::EndsWithIgnoreCase(fstab_entry.blk_device, ".img")) {
-+                devices->emplace(basename(fstab_entry.blk_device.c_str()));
-+            }
+                 devices->emplace(basename(fstab_entry.blk_device.c_str()));
+             }
          }
-     }
- 
 -- 
 2.39.5
 

@@ -1,7 +1,7 @@
-From cf6aa0f141584f9e5ee22c563fee5eb03113dec4 Mon Sep 17 00:00:00 2001
+From 376a70335409c36b85b10eaa28242697571619de Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:37:46 +0800
-Subject: [PATCH 14/15] fs_mgr: Try remounting as read-only if cannot be
+Subject: [PATCH 18/19] fs_mgr: Try remounting as read-only if cannot be
  mounted as read-write
 
 Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411
@@ -10,7 +10,7 @@ Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 36183cca7d..efbc726651 100644
+index 51c6d49c58..8604a3bf16 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
 @@ -829,6 +829,7 @@ static int __mount(const std::string& source, const std::string& target, const F

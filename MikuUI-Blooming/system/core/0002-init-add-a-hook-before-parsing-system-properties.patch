@@ -1,7 +1,7 @@
-From 83db17ac129467dd571fa1caffd2d7b8f46e5e35 Mon Sep 17 00:00:00 2001
+From 852e5fe28b82d25ecf12ab67d2e4ca4eaf1c035a Mon Sep 17 00:00:00 2001
 From: dianlujitao <dianlujitao@lineageos.org>
 Date: Fri, 11 Jul 2025 16:06:11 +0800
-Subject: [PATCH 03/15] init: add a hook before parsing system properties
+Subject: [PATCH 02/17] init: add a hook before parsing system properties
 
 Also properly implement weak symbol overridden while at it.
 

@@ -1,7 +1,7 @@
-From 281fbc0174b6760955088e6e59d9f267bb08a241 Mon Sep 17 00:00:00 2001
+From b1bd33b9654e4fde4325c5bdefadfa6044b3cb37 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 16:39:56 +0800
-Subject: [PATCH 08/15] fs_mgr: Add apfs to supported fs list
+Subject: [PATCH 08/17] fs_mgr: Add apfs to supported fs list
 
 Change-Id: I1a0021146afc0a40842e7860de78148725f433d3
 ---

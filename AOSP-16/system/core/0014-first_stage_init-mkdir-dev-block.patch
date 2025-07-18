@@ -1,0 +1,27 @@
+From 048b28cb1e89c2f4226fdbb6e659c1cfeb92d40f Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 18 Jul 2025 21:32:57 +0800
+Subject: [PATCH 14/19] first_stage_init: mkdir /dev/block
+
+* So that we can mknod() in there without having block devices
+
+Change-Id: Id348498824f87165ca3fb12abe4aa6ea2c301529
+---
+ init/first_stage_init.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/init/first_stage_init.cpp b/init/first_stage_init.cpp
+index e06a645931..4bd7094ccf 100644
+--- a/init/first_stage_init.cpp
++++ b/init/first_stage_init.cpp
+@@ -349,6 +349,7 @@ int FirstStageMain(int argc, char** argv) {
+     // Get the basic filesystem setup we need put together in the initramdisk
+     // on / and then we'll let the rc file figure out the rest.
+     CHECKCALL(mount("tmpfs", "/dev", "tmpfs", MS_NOSUID, "mode=0755"));
++    CHECKCALL(mkdir("/dev/block", 0755));
+     CHECKCALL(mkdir("/dev/pts", 0755));
+     CHECKCALL(mkdir("/dev/socket", 0755));
+     CHECKCALL(mkdir("/dev/dm-user", 0755));
+-- 
+2.39.5
+

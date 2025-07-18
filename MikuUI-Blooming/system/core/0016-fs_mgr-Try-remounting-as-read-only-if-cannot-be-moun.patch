@@ -1,4 +1,4 @@
-From 609a9b23f7a24f24222d1359730aad30be19bd67 Mon Sep 17 00:00:00 2001
+From e2f9bdabf751377bd6f715b08a38c21678fbd4d1 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:37:46 +0800
 Subject: [PATCH 16/17] fs_mgr: Try remounting as read-only if cannot be
@@ -10,7 +10,7 @@ Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 36183cca7d..efbc726651 100644
+index 51c6d49c58..8604a3bf16 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
 @@ -829,6 +829,7 @@ static int __mount(const std::string& source, const std::string& target, const F

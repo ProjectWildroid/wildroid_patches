@@ -1,7 +1,7 @@
-From 787b5dab366f092e426c5f5813adbe320da26241 Mon Sep 17 00:00:00 2001
+From 3f4de15b61d44c111aee43e0453bfaecaf414e6a Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 6 Jul 2025 04:31:04 +0800
-Subject: [PATCH 14/17] fs_mgr: Add fs_mgr option which ensures a list of paths
+Subject: [PATCH 17/19] fs_mgr: Add fs_mgr option which ensures a list of paths
  must be accessible in mountpoint
 
 Change-Id: I13dd240f184d2f6a962db169eed929de5d14bea4
@@ -12,7 +12,7 @@ Change-Id: I13dd240f184d2f6a962db169eed929de5d14bea4
  3 files changed, 17 insertions(+)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 05706d8501..049bb551e7 100644
+index 07b6df712d..51c6d49c58 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
 @@ -883,6 +883,20 @@ static int __mount(const std::string& source, const std::string& target, const F
