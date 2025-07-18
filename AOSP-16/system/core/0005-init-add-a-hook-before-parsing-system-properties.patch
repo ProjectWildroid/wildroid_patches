@@ -1,0 +1,87 @@
+From ce2d809af6e4540103c51e88c35648137c8081ca Mon Sep 17 00:00:00 2001
+From: dianlujitao <dianlujitao@lineageos.org>
+Date: Fri, 11 Jul 2025 16:06:11 +0800
+Subject: [PATCH 05/17] init: add a hook before parsing system properties
+
+Also properly implement weak symbol overridden while at it.
+
+Change-Id: Id563c8aaa52c0e41823dbb035f0319a6531f12b7
+---
+ init/Android.bp           | 11 ++---------
+ init/property_service.cpp |  2 ++
+ init/vendor_init.cpp      |  5 +++++
+ init/vendor_init.h        |  3 ++-
+ 4 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/init/Android.bp b/init/Android.bp
+index 4907dddc31..c30afd6e5e 100644
+--- a/init/Android.bp
++++ b/init/Android.bp
+@@ -84,16 +84,9 @@ init_device_sources = [
+     "uevent_listener.cpp",
+     "ueventd.cpp",
+     "ueventd_parser.cpp",
++    "vendor_init.cpp",
+ ]
+ 
+-cc_library_static {
+-    name: "vendor_init",
+-    recovery_available: true,
+-    srcs: [
+-        "vendor_init.cpp",
+-    ],
+-}
+-
+ soong_config_module_type {
+     name: "libinit_cc_defaults",
+     module_type: "cc_defaults",
+@@ -233,7 +226,7 @@ cc_defaults {
+         "libcap",
+     ] + select(soong_config_variable("libinit", "vendor_init_lib"), {
+         any @ flag_val: [flag_val],
+-        default: ["vendor_init"],
++        default: [],
+     }),
+     header_libs: ["bootimg_headers"],
+     proto: {
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index e714d86786..095e5f5dcc 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -1428,6 +1428,8 @@ void PropertyInit() {
+     ProcessKernelCmdline();
+     ProcessBootconfig();
+ 
++    vendor_process_bootenv();
++
+     // Propagate the kernel variables to internal variables
+     // used by init as well as the current required properties.
+     ExportKernelBootProps();
+diff --git a/init/vendor_init.cpp b/init/vendor_init.cpp
+index d3fd5ffe2b..fa104c8462 100644
+--- a/init/vendor_init.cpp
++++ b/init/vendor_init.cpp
+@@ -35,3 +35,8 @@ __attribute__ ((weak))
+ void vendor_load_properties()
+ {
+ }
++
++__attribute__ ((weak))
++void vendor_process_bootenv()
++{
++}
+diff --git a/init/vendor_init.h b/init/vendor_init.h
+index 9afb449be0..8dc2bbaf7e 100644
+--- a/init/vendor_init.h
++++ b/init/vendor_init.h
+@@ -29,5 +29,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #ifndef __INIT_VENDOR__H__
+ #define __INIT_VENDOR__H__
+-extern void vendor_load_properties(void);
++void vendor_load_properties();
++void vendor_process_bootenv();
+ #endif /* __INIT_VENDOR__H__ */
+-- 
+2.39.5
+

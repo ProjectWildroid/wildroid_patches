@@ -1,0 +1,93 @@
+From 07ee9f182476bc7d374aa19d994eb114e2d6a0ee Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 18 Jul 2025 05:10:01 +0800
+Subject: [PATCH 17/17] libfstab: Add support for boot config
+ `mount_on_oem_which_contain`
+
+This mounts block devices from physical disks containing paths
+specified by the boot config value, separated by ";", on /oem.
+
+Change-Id: Iafd67682f23922db163d97da35138f758d6a4af1
+---
+ fs_mgr/libfstab/fstab.cpp | 55 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+
+diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
+index 80b0304c53..7ae810c9dc 100644
+--- a/fs_mgr/libfstab/fstab.cpp
++++ b/fs_mgr/libfstab/fstab.cpp
+@@ -26,6 +26,7 @@
+ 
+ #include <algorithm>
+ #include <array>
++#include <filesystem>
+ #include <unordered_map>
+ #include <utility>
+ #include <vector>
+@@ -907,9 +908,63 @@ bool SkipMountWithConfig(const std::string& skip_mount_config, Fstab* fstab, boo
+     return true;
+ }
+ 
++namespace {
++
++bool PathIsPhysicalBlockDevice(const std::string& path) {
++    return android::base::StartsWith(path, "/dev/block/mmcblk") ||
++           android::base::StartsWith(path, "/dev/block/nvme") ||
++           android::base::StartsWith(path, "/dev/block/sd") ||
++           android::base::StartsWith(path, "/dev/block/sr") ||
++           android::base::StartsWith(path, "/dev/block/vd");
++}
++
++void AddOemMountpointContainingPathFstabEntries(Fstab* fstab) {
++    std::string contain;
++    if (!fs_mgr_get_boot_config("mount_on_oem_which_contain", &contain)) return;
++    LINFO << __FUNCTION__ << "(): Boot config value: " << contain;
++
++    std::vector<std::string> blk_devices;
++
++    for (const auto& entry : std::filesystem::directory_iterator("/dev/block")) {
++        std::string path = entry.path().string();
++        struct stat sb;
++
++        if (stat(path.c_str(), &sb) == 0) {
++            if (S_ISBLK(sb.st_mode) && PathIsPhysicalBlockDevice(path)) {
++                LINFO << __FUNCTION__ << "(): Found block device " << path;
++                blk_devices.push_back(path);
++            }
++        }
++    }
++
++    if (blk_devices.empty()) return;
++
++    const std::vector<std::string> filesystems = {"exfat",   "ext4", "f2fs",
++                                                  "iso9660", "ntfs", "vfat"};
++
++    for (const auto& bdev : blk_devices) {
++        for (const auto& fs : filesystems) {
++            FstabEntry entry;
++
++            entry.blk_device = bdev;
++            entry.ensure_path_accessible = Split(contain, ";");
++            entry.mount_point = "/oem";
++            entry.fs_mgr_flags.first_stage_mount = true;
++            entry.fs_type = fs;
++
++            fstab->push_back(std::move(entry));
++        }
++    }
++}
++
++}  // namespace
++
+ // Loads the fstab file and combines with fstab entries passed in from device tree.
+ bool ReadDefaultFstab(Fstab* fstab) {
+     fstab->clear();
++
++    AddOemMountpointContainingPathFstabEntries(fstab);
++
+     ReadFstabFromDt(fstab, false /* verbose */);
+ 
+     Fstab default_fstab;
+-- 
+2.39.5
+
