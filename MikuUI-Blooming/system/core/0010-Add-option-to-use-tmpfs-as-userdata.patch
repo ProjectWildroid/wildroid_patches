@@ -1,7 +1,7 @@
-From d9178513411cbf58e76b68f7117b316cce2bef34 Mon Sep 17 00:00:00 2001
+From 2951715ce79536544a6fbd6606c844a16707c680 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 05:39:31 +0800
-Subject: [PATCH 08/11] Add option to use tmpfs as userdata
+Subject: [PATCH 10/15] Add option to use tmpfs as userdata
 
 * Helps testing ROM on devices containing important userdata
 * Set GSI running prop to offset gatekeeper UID, to avoid
@@ -14,7 +14,7 @@ Change-Id: I82d12a46c962b4d54d0ca27097ae9e5becdc1184
  2 files changed, 44 insertions(+), 2 deletions(-)
 
 diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
-index ec23ce5cf1..c54c21eb87 100644
+index ec23ce5cf1..a1f2ffffa1 100644
 --- a/fs_mgr/libfstab/fstab.cpp
 +++ b/fs_mgr/libfstab/fstab.cpp
 @@ -26,6 +26,7 @@
@@ -36,9 +36,9 @@ index ec23ce5cf1..c54c21eb87 100644
 +    if (!fs_mgr_get_boot_config("use_tmpfs_userdata", &tmp)) return;
 +
 +    std::unordered_map<std::string, bool> mountpoints = {
-+        {"/cache", false},
-+        {"/data", true},
-+        {"/metadata", true},
++            {"/cache", false},
++            {"/data", true},
++            {"/metadata", true},
 +    };
 +
 +    std::erase_if(*fstab, [&mountpoints](const FstabEntry& e) {
@@ -52,11 +52,11 @@ index ec23ce5cf1..c54c21eb87 100644
 +
 +    for (const auto& m : mountpoints) {
 +        if (!m.second) continue;
-+        LINFO << __FUNCTION__ << "(): Transform fstab entry "
-+              << m.first << " for tmpfs";
++        LINFO << __FUNCTION__ << "(): Transform fstab entry " << m.first << " for tmpfs";
 +
 +        FstabEntry entry;
 +        entry.blk_device = m.first.substr(1);
++        entry.fs_mgr_flags.first_stage_mount = true;
 +        entry.fs_mgr_flags.late_mount = true;
 +        entry.fs_type = "tmpfs";
 +        entry.mount_point = m.first;

@@ -1,0 +1,26 @@
+From d4ce442988c1dd32d57638cef9b23ee612149c5a Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 18 Jul 2025 05:46:29 +0800
+Subject: [PATCH 09/15] fs_mgr: Add virtiofs to supported fs list
+
+Change-Id: I25986ee90782ef75f284c4f628ed62989f6277cb
+---
+ fs_mgr/fs_mgr_roots.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs_mgr/fs_mgr_roots.cpp b/fs_mgr/fs_mgr_roots.cpp
+index fdbcbb7793..1a51e30d86 100644
+--- a/fs_mgr/fs_mgr_roots.cpp
++++ b/fs_mgr/fs_mgr_roots.cpp
+@@ -116,7 +116,7 @@ bool TryPathMount(FstabEntry* rec, const std::string& mount_pt) {
+     }
+ 
+     static const std::vector<std::string> supported_fs{"ext4", "squashfs", "vfat", "exfat", "f2fs",
+-                                                       "erofs", "none", "apfs"};
++                                                       "erofs", "none", "apfs", "virtiofs"};
+     if (std::find(supported_fs.begin(), supported_fs.end(), rec->fs_type) == supported_fs.end()) {
+         LERROR << "unknown fs_type \"" << rec->fs_type << "\" for " << mount_point;
+         return false;
+-- 
+2.39.5
+

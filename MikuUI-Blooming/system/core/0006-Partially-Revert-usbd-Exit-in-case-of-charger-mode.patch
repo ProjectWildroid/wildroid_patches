@@ -1,7 +1,7 @@
-From 60116108651d5a9c7e6e54a9543e1c75026d8b81 Mon Sep 17 00:00:00 2001
+From 996e10349ec844a5a979f08296be1ba14602f8f8 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 13 Apr 2025 17:37:55 +0800
-Subject: [PATCH 05/11] Partially Revert "usbd: Exit in case of charger mode."
+Subject: [PATCH 06/15] Partially Revert "usbd: Exit in case of charger mode."
 
 * Normally nothing should start usbd in charger mode.
 * This breaks USB when the device is booted from charger mode.

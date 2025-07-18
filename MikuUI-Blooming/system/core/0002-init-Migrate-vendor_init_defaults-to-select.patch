@@ -1,7 +1,7 @@
-From 45bcae0f718844ad9fea7e5557c1cbf8aeb0c025 Mon Sep 17 00:00:00 2001
+From b72ba1511fa124ec31e2f8f8cb50dbc3a61ec81e Mon Sep 17 00:00:00 2001
 From: Michael Bestas <mkbestas@lineageos.org>
 Date: Fri, 25 Apr 2025 00:00:14 +0300
-Subject: [PATCH 02/11] init: Migrate vendor_init_defaults to select()
+Subject: [PATCH 02/15] init: Migrate vendor_init_defaults to select()
 
 Change-Id: I485511ba41b96a9b95f83e8ae35cabf89d4cdb35
 ---

@@ -1,0 +1,44 @@
+From 0c053001bccd1f91a8823f375f52a6c67033506e Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 18 Jul 2025 05:37:46 +0800
+Subject: [PATCH 14/15] fs_mgr: Try remounting as read-only if cannot be
+ mounted as read-write
+
+Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411
+---
+ fs_mgr/fs_mgr.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
+index 36183cca7d..32d2cf71cc 100644
+--- a/fs_mgr/fs_mgr.cpp
++++ b/fs_mgr/fs_mgr.cpp
+@@ -829,6 +829,7 @@ static int __mount(const std::string& source, const std::string& target, const F
+     std::string checkpoint_opts;
+     bool try_f2fs_gc_allowance = is_f2fs(entry.fs_type) && entry.fs_checkpoint_opts.length() > 0;
+     bool try_f2fs_fallback = false;
++    bool try_readonly = !read_only;
+     Timer t;
+ 
+     do {
+@@ -845,6 +846,7 @@ static int __mount(const std::string& source, const std::string& target, const F
+         } else {
+             checkpoint_opts = "";
+         }
++        if (try_readonly) mountflags |= MS_RDONLY;
+         opts = entry.fs_options + checkpoint_opts;
+         if (save_errno == EAGAIN) {
+             PINFO << "Retrying mount (source=" << source << ",target=" << target
+@@ -867,7 +869,8 @@ static int __mount(const std::string& source, const std::string& target, const F
+         save_errno = errno;
+         if (try_f2fs_gc_allowance) gc_allowance += 10;
+     } while ((ret && save_errno == EAGAIN && gc_allowance <= 100) ||
+-             (ret && save_errno == EINVAL && (try_f2fs_gc_allowance || try_f2fs_fallback)));
++             (ret && save_errno == EINVAL && (try_f2fs_gc_allowance || try_f2fs_fallback)) ||
++             (try_readonly && ret && (save_errno == EACCES || save_errno == EROFS)));
+     const char* target_missing = "";
+     const char* source_missing = "";
+     if (save_errno == ENOENT) {
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
-From 1a64a2513f593ebe775815ee4b5df9d8de4d0912 Mon Sep 17 00:00:00 2001
+From 748b171a5ffe6b0a0da4b7d7c40299ef9db5f095 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 22:14:46 +0800
-Subject: [PATCH 11/11] fs_mgr: Add support for parsing FAT filesystem label
+Subject: [PATCH 13/15] fs_mgr: Add support for parsing FAT filesystem label
 
 Change-Id: I387772f6b6db1252add9061b03caaacfa2f0868f
 ---

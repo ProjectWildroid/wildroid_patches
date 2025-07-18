@@ -1,7 +1,7 @@
-From 67cbf9d60a453eafd180892e3a76f883126b09d1 Mon Sep 17 00:00:00 2001
+From 944cdd377483828332fd7d32f1928d482dde6a96 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 17:57:10 +0800
-Subject: [PATCH 09/11] Add support for mounting partition image in first stage
+Subject: [PATCH 11/15] Add support for mounting partition image in first stage
  mount
 
 Change-Id: I4aaec7e838ef6009ddf76439e77e1b634abb7345
@@ -166,7 +166,7 @@ index 32d5f383e7..4c484cfc14 100644
                         bool auto_close)
      : fd_(fd), owned_fd_(-1) {
 diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
-index c54c21eb87..06182d8880 100644
+index a1f2ffffa1..0eb438dc12 100644
 --- a/fs_mgr/libfstab/fstab.cpp
 +++ b/fs_mgr/libfstab/fstab.cpp
 @@ -650,7 +650,7 @@ bool ParseFstabFromString(const std::string& fstab_str, bool proc_mounts, Fstab*

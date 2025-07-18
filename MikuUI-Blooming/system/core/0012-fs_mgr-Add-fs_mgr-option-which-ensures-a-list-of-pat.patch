@@ -1,7 +1,7 @@
-From 02fb93e8d8b262df30becbadb7bef7a357562ae7 Mon Sep 17 00:00:00 2001
+From f9194da4e8e9c351e97dcfc078f7a2a97773d9c9 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 6 Jul 2025 04:31:04 +0800
-Subject: [PATCH 10/11] fs_mgr: Add fs_mgr option which ensures a list of paths
+Subject: [PATCH 12/15] fs_mgr: Add fs_mgr option which ensures a list of paths
  must be accessible in mountpoint
 
 Change-Id: I13dd240f184d2f6a962db169eed929de5d14bea4
@@ -37,7 +37,7 @@ index 05706d8501..049bb551e7 100644
          android::base::SetProperty("ro.boottime.init.mount." + Basename(target),
                                     std::to_string(t.duration().count()));
 diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
-index 06182d8880..43eab414ed 100644
+index 0eb438dc12..80b0304c53 100644
 --- a/fs_mgr/libfstab/fstab.cpp
 +++ b/fs_mgr/libfstab/fstab.cpp
 @@ -342,6 +342,8 @@ bool ParseFsMgrFlags(const std::string& flags, FstabEntry* entry) {
