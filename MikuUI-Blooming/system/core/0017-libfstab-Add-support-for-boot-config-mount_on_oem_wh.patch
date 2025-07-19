@@ -1,7 +1,7 @@
-From 29aa5b1c599cfadbf2ed5395ef4333d3655a4a3d Mon Sep 17 00:00:00 2001
+From ccf2417c1fd2ad5f617f72bcdae5153c314cef41 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:10:01 +0800
-Subject: [PATCH 17/17] libfstab: Add support for boot config
+Subject: [PATCH] libfstab: Add support for boot config
  `mount_on_oem_which_contain`
 
 This mounts block devices from physical disks containing paths
@@ -13,7 +13,7 @@ Change-Id: Iafd67682f23922db163d97da35138f758d6a4af1
  1 file changed, 45 insertions(+)
 
 diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
-index 80b0304c53..513d16c36f 100644
+index 80b0304c53..90495b9331 100644
 --- a/fs_mgr/libfstab/fstab.cpp
 +++ b/fs_mgr/libfstab/fstab.cpp
 @@ -26,6 +26,7 @@
@@ -39,9 +39,9 @@ index 80b0304c53..513d16c36f 100644
 +
 +    for (const auto& entry : std::filesystem::directory_iterator("/sys/block")) {
 +        std::string name = entry.path().filename().string();
-+        if (!android::base::StartsWith(name, ".") &&
-+            !android::base::StartsWith(name, "loop") &&
-+            !android::base::StartsWith(name, "ram")) {
++        if (!android::base::StartsWith(name, ".") && !android::base::StartsWith(name, "dm-") &&
++            !android::base::StartsWith(name, "loop") && !android::base::StartsWith(name, "ram") &&
++            !android::base::StartsWith(name, "zram")) {
 +            LINFO << __FUNCTION__ << "(): Found block device " << name;
 +            blk_devices.push_back(name);
 +        }
@@ -49,8 +49,8 @@ index 80b0304c53..513d16c36f 100644
 +
 +    if (blk_devices.empty()) return;
 +
-+    const std::vector<std::string> filesystems = {"exfat",   "ext4", "f2fs",
-+                                                  "iso9660", "ntfs", "vfat"};
++    const std::vector<std::string> filesystems = {"erofs",   "exfat", "ext4",     "f2fs",
++                                                  "iso9660", "ntfs",  "squashfs", "vfat"};
 +
 +    for (const auto& bdev : blk_devices) {
 +        for (const auto& fs : filesystems) {
