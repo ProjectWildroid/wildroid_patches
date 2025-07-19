@@ -1,0 +1,293 @@
+From bc016d3fb8cbca599d4a02026b45a384b988fb0f Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 19 Jul 2025 20:18:29 +0800
+Subject: [PATCH 5/6] Add generic_x86 modules
+
+Change-Id: Icf63f833383ef2662ea168e234952e180a613a34
+---
+ Android.bp                                    | 19 +++++++++++
+ cros_gralloc/aidl/Allocator.cpp               |  4 +--
+ cros_gralloc/aidl/Android.bp                  | 34 +++++++++++++++++--
+ cros_gralloc/aidl/allocator.generic_x86.rc    |  7 ++++
+ cros_gralloc/gralloc4/Android.bp              | 16 +++++++++
+ ...locator@4.0-service.minigbm_generic_x86.rc | 24 +++++++++++++
+ cros_gralloc/mapper_stablec/Android.bp        | 31 ++++++++++++++---
+ .../mapper.minigbm_generic_x86.xml            |  9 +++++
+ 8 files changed, 135 insertions(+), 9 deletions(-)
+ create mode 100644 cros_gralloc/aidl/allocator.generic_x86.rc
+ create mode 100644 cros_gralloc/gralloc4/android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86.rc
+ create mode 100644 cros_gralloc/mapper_stablec/mapper.minigbm_generic_x86.xml
+
+diff --git a/Android.bp b/Android.bp
+index fdfd45e..e88fe7a 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -83,6 +83,11 @@ msm_cflags = [
+ ]
+ arcvm_cflags = ["-DVIRTIO_GPU_NEXT"]
+ 
++generic_x86_cflags = arcvm_cflags + generic_cflags + intel_cflags + [
++    "-DDRV_AMDGPU",
++    "-DDRV_VMWGFX",
++]
++
+ cc_defaults {
+     name: "minigbm_defaults",
+ 
+@@ -97,6 +102,7 @@ cc_defaults {
+         "-Wsign-compare",
+     ] + select(soong_config_variable("minigbm", "platform"), {
+         "generic": generic_cflags,
++        "generic_x86": generic_x86_cflags,
+         "intel": intel_cflags,
+         "meson": meson_cflags,
+         "msm": msm_cflags,
+@@ -255,6 +261,19 @@ cc_library_headers {
+     ],
+ }
+ 
++// Generic x86
++cc_library_shared {
++    name: "libminigbm_gralloc_generic_x86",
++    defaults: ["minigbm_cros_gralloc_library_defaults"],
++    cflags: generic_x86_cflags,
++}
++
++cc_library_shared {
++    name: "gralloc.minigbm_generic_x86",
++    defaults: ["minigbm_cros_gralloc0_defaults"],
++    shared_libs: ["libminigbm_gralloc_generic_x86"],
++}
++
+ // Intel
+ cc_library_shared {
+     name: "libminigbm_gralloc_intel",
+diff --git a/cros_gralloc/aidl/Allocator.cpp b/cros_gralloc/aidl/Allocator.cpp
+index 199c7f1..73b67d9 100644
+--- a/cros_gralloc/aidl/Allocator.cpp
++++ b/cros_gralloc/aidl/Allocator.cpp
+@@ -198,7 +198,7 @@ ndk::ScopedAStatus Allocator::isSupported(const BufferDescriptorInfo& descriptor
+ }
+ 
+ ndk::ScopedAStatus Allocator::getIMapperLibrarySuffix(std::string* outResult) {
+-    *outResult = "minigbm";
++    *outResult = IMAPPER_LIBRARY_SUFFIX;
+     return ndk::ScopedAStatus::ok();
+ }
+ 
+@@ -208,4 +208,4 @@ ndk::ScopedAStatus Allocator::getIMapperLibrarySuffix(std::string* outResult) {
+     return binder;
+ }
+ 
+-}  // namespace aidl::android::hardware::graphics::allocator::impl
+\ No newline at end of file
++}  // namespace aidl::android::hardware::graphics::allocator::impl
+diff --git a/cros_gralloc/aidl/Android.bp b/cros_gralloc/aidl/Android.bp
+index b52f806..de8e9de 100644
+--- a/cros_gralloc/aidl/Android.bp
++++ b/cros_gralloc/aidl/Android.bp
+@@ -23,11 +23,10 @@ package {
+     default_applicable_licenses: ["external_minigbm_license"],
+ }
+ 
+-cc_binary {
+-    name: "android.hardware.graphics.allocator-service.minigbm",
++cc_defaults {
++    name: "defaults_android.hardware.graphics.allocator-service.minigbm",
+     defaults: ["minigbm_cros_gralloc_defaults"],
+     relative_install_path: "hw",
+-    init_rc: ["allocator.rc"],
+     vintf_fragments: ["allocator.xml"],
+     vendor: true,
+     shared_libs: [
+@@ -50,11 +49,40 @@ cc_binary {
+     ],
+ }
+ 
++cc_binary {
++    name: "android.hardware.graphics.allocator-service.minigbm",
++    defaults: ["defaults_android.hardware.graphics.allocator-service.minigbm"],
++    init_rc: ["allocator.rc"],
++    cflags: [
++        "-DIMAPPER_LIBRARY_SUFFIX=\"minigbm\"",
++    ],
++    shared_libs: [
++        "libminigbm_gralloc",
++    ],
++}
++
++cc_binary {
++    name: "android.hardware.graphics.allocator-service.minigbm_generic_x86",
++    defaults: ["defaults_android.hardware.graphics.allocator-service.minigbm"],
++    init_rc: ["allocator.generic_x86.rc"],
++    cflags: [
++        "-DIMAPPER_LIBRARY_SUFFIX=\"minigbm_generic_x86\"",
++    ],
++    shared_libs: [
++        "libminigbm_gralloc_generic_x86",
++    ],
++}
++
+ filegroup {
+     name: "allocator.minigbm.rc",
+     srcs: ["allocator.rc"]
+ }
+ 
++filegroup {
++    name: "allocator.minigbm_generic_x86.rc",
++    srcs: ["allocator.generic_x86.rc"]
++}
++
+ prebuilt_etc {
+     name: "allocator.minigbm.xml",
+     src: "allocator.xml",
+diff --git a/cros_gralloc/aidl/allocator.generic_x86.rc b/cros_gralloc/aidl/allocator.generic_x86.rc
+new file mode 100644
+index 0000000..eddfecd
+--- /dev/null
++++ b/cros_gralloc/aidl/allocator.generic_x86.rc
+@@ -0,0 +1,7 @@
++service vendor.graphics.allocator /vendor/bin/hw/android.hardware.graphics.allocator-service.minigbm_generic_x86
++    class hal animation
++    user system
++    group graphics drmrpc
++    capabilities SYS_NICE
++    onrestart restart surfaceflinger
++    task_profiles ServiceCapacityLow
+diff --git a/cros_gralloc/gralloc4/Android.bp b/cros_gralloc/gralloc4/Android.bp
+index 73588f7..bcde38f 100644
+--- a/cros_gralloc/gralloc4/Android.bp
++++ b/cros_gralloc/gralloc4/Android.bp
+@@ -93,6 +93,14 @@ cc_binary {
+     init_rc: ["android.hardware.graphics.allocator@4.0-service.minigbm.rc"],
+ }
+ 
++cc_binary {
++    name: "android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86",
++    defaults: ["minigbm_gralloc4_allocator_defaults"],
++    shared_libs: ["libminigbm_gralloc_generic_x86"],
++    vintf_fragment_modules: ["android.hardware.graphics.allocator@4.0.xml"],
++    init_rc: ["android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86.rc"],
++}
++
+ cc_binary {
+     name: "android.hardware.graphics.allocator@4.0-service.minigbm_msm",
+     defaults: ["minigbm_gralloc4_allocator_defaults"],
+@@ -140,6 +148,14 @@ cc_library_shared {
+     srcs: [":minigbm_gralloc4_mapper_files"],
+ }
+ 
++cc_library_shared {
++    name: "android.hardware.graphics.mapper@4.0-impl.minigbm_generic_x86",
++    defaults: ["minigbm_gralloc4_common_defaults"],
++    shared_libs: ["libminigbm_gralloc_generic_x86"],
++    vintf_fragment_modules: ["android.hardware.graphics.mapper@4.0.xml"],
++    srcs: [":minigbm_gralloc4_mapper_files"],
++}
++
+ cc_library_shared {
+     name: "android.hardware.graphics.mapper@4.0-impl.minigbm_msm",
+     defaults: ["minigbm_gralloc4_common_defaults"],
+diff --git a/cros_gralloc/gralloc4/android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86.rc b/cros_gralloc/gralloc4/android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86.rc
+new file mode 100644
+index 0000000..1fae890
+--- /dev/null
++++ b/cros_gralloc/gralloc4/android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86.rc
+@@ -0,0 +1,24 @@
++#
++# Copyright 2020 The Android Open Source Project
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++
++service vendor.graphics.allocator-4-0 /vendor/bin/hw/android.hardware.graphics.allocator@4.0-service.minigbm_generic_x86
++    interface android.hardware.graphics.allocator@4.0::IAllocator default
++    class hal animation
++    user system
++    group graphics drmrpc
++    capabilities SYS_NICE
++    onrestart restart surfaceflinger
++    task_profiles ServiceCapacityLow
+diff --git a/cros_gralloc/mapper_stablec/Android.bp b/cros_gralloc/mapper_stablec/Android.bp
+index 401c177..f6099e5 100644
+--- a/cros_gralloc/mapper_stablec/Android.bp
++++ b/cros_gralloc/mapper_stablec/Android.bp
+@@ -23,13 +23,11 @@ package {
+     default_applicable_licenses: ["external_minigbm_license"],
+ }
+ 
+-cc_library_shared {
+-    name: "mapper.minigbm",
++cc_defaults {
++    name: "defaults_mapper.minigbm",
+     defaults: ["minigbm_gralloc4_common_defaults"],
+-    vintf_fragments: ["mapper.minigbm.xml"],
+     shared_libs: [
+         "android.hardware.graphics.allocator-V2-ndk",
+-        "libminigbm_gralloc",
+     ],
+     header_libs: [
+         "libbase_headers",
+@@ -43,9 +41,34 @@ cc_library_shared {
+     cpp_std: "c++20",
+ }
+ 
++cc_library_shared {
++    name: "mapper.minigbm",
++    defaults: ["defaults_mapper.minigbm"],
++    shared_libs: [
++        "libminigbm_gralloc",
++    ],
++    vintf_fragments: ["mapper.minigbm.xml"],
++}
++
++cc_library_shared {
++    name: "mapper.minigbm_generic_x86",
++    defaults: ["defaults_mapper.minigbm"],
++    shared_libs: [
++        "libminigbm_gralloc_generic_x86",
++    ],
++    vintf_fragments: ["mapper.minigbm_generic_x86.xml"],
++}
++
+ prebuilt_etc {
+     name: "mapper.minigbm.xml",
+     src: "mapper.minigbm.xml",
+     sub_dir: "vintf",
+     installable: false,
+ }
++
++prebuilt_etc {
++    name: "mapper.minigbm_generic_x86.xml",
++    src: "mapper.minigbm_generic_x86.xml",
++    sub_dir: "vintf",
++    installable: false,
++}
+diff --git a/cros_gralloc/mapper_stablec/mapper.minigbm_generic_x86.xml b/cros_gralloc/mapper_stablec/mapper.minigbm_generic_x86.xml
+new file mode 100644
+index 0000000..1b86290
+--- /dev/null
++++ b/cros_gralloc/mapper_stablec/mapper.minigbm_generic_x86.xml
+@@ -0,0 +1,9 @@
++<manifest version="1.0" type="device">
++    <hal format="native">
++        <name>mapper</name>
++        <version>5.0</version>
++        <interface>
++            <instance>minigbm_generic_x86</instance>
++        </interface>
++    </hal>
++</manifest>
+-- 
+2.39.5
+

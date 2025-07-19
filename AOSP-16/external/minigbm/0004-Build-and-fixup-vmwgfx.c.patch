@@ -1,0 +1,39 @@
+From b0fa4ac34d66bf30576e6845039e8fca68d52a5a Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 19 Jul 2025 20:58:34 +0800
+Subject: [PATCH 4/6] Build and fixup vmwgfx.c
+
+Change-Id: I3c4992425cd3825915901fbb5316ef98a777cbc1
+---
+ Android.bp | 1 +
+ vmwgfx.c   | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Android.bp b/Android.bp
+index d044e7d..fdfd45e 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -50,6 +50,7 @@ filegroup {
+         "virtgpu.c",
+         "virtgpu_cross_domain.c",
+         "virtgpu_virgl.c",
++        "vmwgfx.c",
+         "xe.c",
+     ],
+ }
+diff --git a/vmwgfx.c b/vmwgfx.c
+index f84b301..93aa50a 100644
+--- a/vmwgfx.c
++++ b/vmwgfx.c
+@@ -74,7 +74,7 @@ static uint64_t get_map_handle(struct bo_metadata *meta)
+ 	return (map_handle << 32) & meta->blob_id;
+ }
+ 
+-static const uint32_t drm_format_to_svga_format(uint32_t format)
++static uint32_t drm_format_to_svga_format(uint32_t format)
+ {
+ 	switch (format) {
+ 	case DRM_FORMAT_R8:
+-- 
+2.39.5
+

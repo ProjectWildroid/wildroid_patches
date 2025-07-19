@@ -1,0 +1,96 @@
+From d8f66c4478f2af6ae4ec1dfe69daac3969d3ad33 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 19 Jul 2025 20:58:01 +0800
+Subject: [PATCH 6/6] Fix amdgpu drv build on Android
+
+Change-Id: I7236486b3b775b1100c697184a691183625416fc
+---
+ Android.bp |  7 +++++++
+ amdgpu.h   |  1 +
+ dri.c      | 26 ++++++++++++++------------
+ 3 files changed, 22 insertions(+), 12 deletions(-)
+ create mode 120000 amdgpu.h
+
+diff --git a/Android.bp b/Android.bp
+index e88fe7a..e854b62 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -38,6 +38,7 @@ filegroup {
+     srcs: [
+         "amdgpu.c",
+         "backend_mock.c",
++        "dri.c",
+         "drv.c",
+         "drv_array_helpers.c",
+         "drv_helpers.c",
+@@ -133,9 +134,15 @@ cc_defaults {
+         "libhardware_headers",
+         "libnativebase_headers",
+         "libsystem_headers",
++        "mesa_src_util_format_u_format_gen_h",
+         "minigbm_headers",
+     ],
+ 
++    include_dirs: [
++        "external/mesa/include",
++        "external/mesa/src",
++    ],
++
+     static_libs: ["libarect"],
+ 
+     vendor: true,
+diff --git a/amdgpu.h b/amdgpu.h
+new file mode 120000
+index 0000000..4f94c15
+--- /dev/null
++++ b/amdgpu.h
+@@ -0,0 +1 @@
++../libdrm/amdgpu/amdgpu.h
+\ No newline at end of file
+diff --git a/dri.c b/dri.c
+index bf980be..b80ac57 100644
+--- a/dri.c
++++ b/dri.c
+@@ -27,6 +27,8 @@
+ #include "GL/internal/dri_interface.h"
+ #undef GL_GLEXT_LEGACY
+ 
++#include "util/format/u_formats.h"
++
+ struct dri_driver {
+ 	int fd;
+ 	void *driver_handle;
+@@ -44,18 +46,18 @@ static const struct {
+ 	uint32_t drm_format;
+ 	int dri_image_format;
+ } drm_to_dri_image_formats[] = {
+-	{ DRM_FORMAT_R8, __DRI_IMAGE_FORMAT_R8 },
+-	{ DRM_FORMAT_GR88, __DRI_IMAGE_FORMAT_GR88 },
+-	{ DRM_FORMAT_RGB565, __DRI_IMAGE_FORMAT_RGB565 },
+-	{ DRM_FORMAT_XRGB8888, __DRI_IMAGE_FORMAT_XRGB8888 },
+-	{ DRM_FORMAT_ARGB8888, __DRI_IMAGE_FORMAT_ARGB8888 },
+-	{ DRM_FORMAT_XBGR8888, __DRI_IMAGE_FORMAT_XBGR8888 },
+-	{ DRM_FORMAT_ABGR8888, __DRI_IMAGE_FORMAT_ABGR8888 },
+-	{ DRM_FORMAT_XRGB2101010, __DRI_IMAGE_FORMAT_XRGB2101010 },
+-	{ DRM_FORMAT_XBGR2101010, __DRI_IMAGE_FORMAT_XBGR2101010 },
+-	{ DRM_FORMAT_ARGB2101010, __DRI_IMAGE_FORMAT_ARGB2101010 },
+-	{ DRM_FORMAT_ABGR2101010, __DRI_IMAGE_FORMAT_ABGR2101010 },
+-	{ DRM_FORMAT_ABGR16161616F, __DRI_IMAGE_FORMAT_ABGR16161616F },
++	{ DRM_FORMAT_R8, PIPE_FORMAT_R8_UNORM },
++	{ DRM_FORMAT_GR88, PIPE_FORMAT_R8G8_UNORM },
++	{ DRM_FORMAT_RGB565, PIPE_FORMAT_B5G6R5_UNORM },
++	{ DRM_FORMAT_XRGB8888, PIPE_FORMAT_B8G8R8X8_UNORM },
++	{ DRM_FORMAT_ARGB8888, PIPE_FORMAT_B8G8R8A8_UNORM },
++	{ DRM_FORMAT_XBGR8888, PIPE_FORMAT_R8G8B8X8_UNORM },
++	{ DRM_FORMAT_ABGR8888, PIPE_FORMAT_R8G8B8A8_UNORM },
++	{ DRM_FORMAT_XRGB2101010, PIPE_FORMAT_B10G10R10X2_UNORM },
++	{ DRM_FORMAT_XBGR2101010, PIPE_FORMAT_R10G10B10X2_UNORM },
++	{ DRM_FORMAT_ARGB2101010, PIPE_FORMAT_B10G10R10A2_UNORM },
++	{ DRM_FORMAT_ABGR2101010, PIPE_FORMAT_R10G10B10A2_UNORM },
++	{ DRM_FORMAT_ABGR16161616F, PIPE_FORMAT_R16G16B16A16_FLOAT },
+ };
+ 
+ static int drm_format_to_dri_format(uint32_t drm_format)
+-- 
+2.39.5
+
