@@ -1,7 +1,7 @@
 From b0fa4ac34d66bf30576e6845039e8fca68d52a5a Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 20:58:34 +0800
-Subject: [PATCH 4/6] Build and fixup vmwgfx.c
+Subject: [PATCH 4/7] Build and fixup vmwgfx.c
 
 Change-Id: I3c4992425cd3825915901fbb5316ef98a777cbc1
 ---
