@@ -1,0 +1,29 @@
+From 678dec995ee39cbd5850648741ec5dddad7800bc Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sun, 20 Jul 2025 19:05:59 +0800
+Subject: [PATCH] Allow to opt-out vintf_fragments
+
+Change-Id: Idd253f01895caf4b5c418c077d9fbe4bd69175ff
+---
+ Android.bp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Android.bp b/Android.bp
+index 47b2cd8..ac680e5 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -199,7 +199,10 @@ cc_binary {
+     relative_install_path: "hw",
+     vendor: true,
+ 
+-    vintf_fragments: [":drm_hwcomposer_vintf_manifest"],
++    vintf_fragments: select(soong_config_variable("drm_hwcomposer", "include_vintf_fragments"), {
++        false: [],
++        default: [":drm_hwcomposer_vintf_manifest"],
++    }),
+     init_rc: [":drm_hwcomposer_init_rc"],
+ }
+ 
+-- 
+2.39.5
+
