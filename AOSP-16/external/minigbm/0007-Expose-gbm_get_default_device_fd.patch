@@ -1,4 +1,4 @@
-From 515a43716d3a0a060b3411d2b5e13ce939944274 Mon Sep 17 00:00:00 2001
+From 3adc26baa8b0d3c016fb91bd1f30112418938b10 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 20 Jul 2025 06:40:20 +0800
 Subject: [PATCH 7/7] Expose gbm_get_default_device_fd()

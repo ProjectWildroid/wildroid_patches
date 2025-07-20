@@ -1,18 +1,18 @@
-From d8f66c4478f2af6ae4ec1dfe69daac3969d3ad33 Mon Sep 17 00:00:00 2001
+From 9cb535333c3dec4cf0b787c718251eeb92dc42df Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 20:58:01 +0800
 Subject: [PATCH 6/7] Fix amdgpu drv build on Android
 
 Change-Id: I7236486b3b775b1100c697184a691183625416fc
 ---
- Android.bp |  7 +++++++
+ Android.bp | 10 ++++++++++
  amdgpu.h   |  1 +
  dri.c      | 26 ++++++++++++++------------
- 3 files changed, 22 insertions(+), 12 deletions(-)
+ 3 files changed, 25 insertions(+), 12 deletions(-)
  create mode 120000 amdgpu.h
 
 diff --git a/Android.bp b/Android.bp
-index e88fe7a..e854b62 100644
+index e88fe7a..cd0ee56 100644
 --- a/Android.bp
 +++ b/Android.bp
 @@ -38,6 +38,7 @@ filegroup {
@@ -23,22 +23,22 @@ index e88fe7a..e854b62 100644
          "drv.c",
          "drv_array_helpers.c",
          "drv_helpers.c",
-@@ -133,9 +134,15 @@ cc_defaults {
-         "libhardware_headers",
-         "libnativebase_headers",
-         "libsystem_headers",
-+        "mesa_src_util_format_u_format_gen_h",
-         "minigbm_headers",
-     ],
+@@ -110,6 +111,15 @@ cc_defaults {
+         default: [],
+     }),
  
++    header_libs: [
++        "mesa_src_util_format_u_format_gen_h",
++    ],
++
 +    include_dirs: [
 +        "external/mesa/include",
 +        "external/mesa/src",
 +    ],
 +
-     static_libs: ["libarect"],
- 
-     vendor: true,
+     product_variables: {
+         platform_sdk_version: {
+             cflags: ["-DANDROID_API_LEVEL=%d"],
 diff --git a/amdgpu.h b/amdgpu.h
 new file mode 120000
 index 0000000..4f94c15
