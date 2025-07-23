@@ -1,7 +1,7 @@
-From 3eaa89feb258e08e8b6b75bb5db17b7d3d53d2c6 Mon Sep 17 00:00:00 2001
+From cbe1d9b57b8365c6b32516f730c8e6185187798d Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 23 Jul 2025 03:09:49 +0800
-Subject: [PATCH 21/22] init: reboot_utils: Add option to pause on init fatal
+Subject: [PATCH 21/24] init: reboot_utils: Add option to pause on init fatal
  error
 
 Change-Id: Ie86329f1a03169d08c2dbb9269705e56c5f9ff1f

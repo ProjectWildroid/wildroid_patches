@@ -1,0 +1,43 @@
+From f9deded5f76b7f6720f75e91ce85909b295f6567 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 24 Jul 2025 03:01:48 +0800
+Subject: [PATCH 24/24] rootdir: Let the device decide whether or not to enable
+ kernel module autoloading
+
+Change-Id: Ib111ebfe90f7cb2ac8c7b2c6af48d81c2c0c2b2d
+---
+ rootdir/init.rc    | 5 +++++
+ rootdir/ueventd.rc | 1 -
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 1c996b1f4f..4e8aff6bb9 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -16,6 +16,11 @@ on early-init-begin
+     # Disable sysrq from keyboard
+     write /proc/sys/kernel/sysrq 0
+ 
++    # Android doesn't need kernel module autoloading, and it causes SELinux
++    # denials.  So disable it by setting modprobe to the empty string.  Note: to
++    # explicitly set a sysctl to an empty string, a trailing newline is needed.
++    write /proc/sys/kernel/modprobe /vendor/bin/modprobe_wrapper
++
+     # Set the security context of /adb_keys if present.
+     restorecon /adb_keys
+ 
+diff --git a/rootdir/ueventd.rc b/rootdir/ueventd.rc
+index 2530d5fceb..3927501a47 100644
+--- a/rootdir/ueventd.rc
++++ b/rootdir/ueventd.rc
+@@ -2,7 +2,6 @@ import /vendor/etc/ueventd.rc
+ import /odm/etc/ueventd.rc
+ 
+ firmware_directories /etc/firmware/ /odm/firmware/ /vendor/firmware/ /firmware/image/
+-modalias_handling enabled
+ uevent_socket_rcvbuf_size 16M
+ 
+ subsystem graphics
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
 From 397f1668a8b955e6929ac18ae168e1320f21f136 Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
 Date: Sat, 16 Jul 2022 20:10:52 +0000
-Subject: [PATCH 02/22] liblp: Allow to flash on bigger block device
+Subject: [PATCH 02/24] liblp: Allow to flash on bigger block device
 
 Needed for using Retrofit Dynamic Partitions on unified targets, which has different partition sizes on different devices.
 

@@ -1,23 +1,35 @@
-From dc045f802707f98dc239ea45262e9c50a46f2a2b Mon Sep 17 00:00:00 2001
+From 442e12c42cbdca098474f7d519768113cc11f378 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 17:57:10 +0800
-Subject: [PATCH 12/22] Add support for mounting partition image
+Subject: [PATCH 12/24] Add support for mounting partition image
 
 Change-Id: I4aaec7e838ef6009ddf76439e77e1b634abb7345
 ---
- fs_mgr/fs_mgr.cpp                         | 39 +++++++++++++++++++++
- fs_mgr/include/fs_mgr.h                   |  1 +
+ fs_mgr/fs_mgr.cpp                         | 62 +++++++++++++++++++++++
+ fs_mgr/include/fs_mgr.h                   |  3 ++
  fs_mgr/libdm/include/libdm/loop_control.h |  3 ++
- fs_mgr/libdm/loop_control.cpp             | 42 +++++++++++++++++++++++
+ fs_mgr/libdm/loop_control.cpp             | 42 +++++++++++++++
  fs_mgr/libfstab/fstab.cpp                 |  2 +-
- init/first_stage_mount.cpp                | 21 ++++++++++--
- 6 files changed, 104 insertions(+), 4 deletions(-)
+ init/first_stage_mount.cpp                | 24 +++++++--
+ 6 files changed, 132 insertions(+), 4 deletions(-)
 
 diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
-index 204e690936..07b6df712d 100644
+index 204e690936..c32db9e7e0 100644
 --- a/fs_mgr/fs_mgr.cpp
 +++ b/fs_mgr/fs_mgr.cpp
-@@ -1121,6 +1121,43 @@ static bool call_vdc(const std::vector<std::string>& args, int* ret) {
+@@ -965,6 +965,11 @@ static bool mount_with_alternatives(Fstab& fstab, int start_idx, bool interrupte
+             fstab[i].blk_device = fstab[start_idx].blk_device;
+         }
+ 
++        if ((i != start_idx) &&
++            android::base::StartsWith(fstab[i].blk_device, "/dev/block/loop")) {
++            fstab[i].blk_device = fstab[start_idx].blk_device;
++        }
++
+         int fs_stat = prepare_fs_for_mount(fstab[i].blk_device, fstab[i]);
+         if (fs_stat & FS_STAT_INVALID_MAGIC) {
+             LERROR << __FUNCTION__
+@@ -1121,6 +1126,60 @@ static bool call_vdc(const std::vector<std::string>& args, int* ret) {
      return true;
  }
  
@@ -58,10 +70,27 @@ index 204e690936..07b6df712d 100644
 +    return true;
 +}
 +
++bool fs_mgr_detach_partition_image(FstabEntry* entry) {
++    if (!android::base::StartsWith(entry->blk_device, "/dev/block/loop")) return true;
++
++    unique_fd loop_fd(TEMP_FAILURE_RETRY(open(entry->blk_device.c_str(), O_RDWR | O_CLOEXEC)));
++    if (loop_fd.get() == -1) {
++        PERROR << "Cannot open " << entry->blk_device;
++        return false;
++    }
++
++    if (ioctl(loop_fd.get(), LOOP_CLR_FD, 0)) {
++        PLOG(ERROR) << "Failed LOOP_CLR_FD for '" << entry->blk_device << "'";
++        return false;
++    }
++
++    return true;
++}
++
  bool fs_mgr_update_logical_partition(FstabEntry* entry) {
      // Logical partitions are specified with a named partition rather than a
      // block device, so if the block device is a path, then it has already
-@@ -1531,6 +1568,8 @@ int fs_mgr_mount_all(Fstab* fstab, int mount_mode) {
+@@ -1531,6 +1590,8 @@ int fs_mgr_mount_all(Fstab* fstab, int mount_mode) {
              }
          }
  
@@ -70,18 +99,28 @@ index 204e690936..07b6df712d 100644
          if (current_entry.fs_mgr_flags.logical) {
              if (!fs_mgr_update_logical_partition(&current_entry)) {
                  LERROR << "Could not set up logical partition, skipping!";
+@@ -1715,6 +1776,7 @@ int fs_mgr_mount_all(Fstab* fstab, int mount_mode) {
+             }
+             continue;
+         }
++        fs_mgr_detach_partition_image(&current_entry);
+     }
+     if (userdata_mounted) {
+         Fstab mounted_fstab;
 diff --git a/fs_mgr/include/fs_mgr.h b/fs_mgr/include/fs_mgr.h
-index 79690874e2..133db2deb4 100644
+index 79690874e2..268f2559bb 100644
 --- a/fs_mgr/include/fs_mgr.h
 +++ b/fs_mgr/include/fs_mgr.h
-@@ -86,6 +86,7 @@ std::optional<HashtreeInfo> fs_mgr_get_hashtree_info(const android::fs_mgr::Fsta
- 
+@@ -87,6 +87,9 @@ std::optional<HashtreeInfo> fs_mgr_get_hashtree_info(const android::fs_mgr::Fsta
  bool fs_mgr_swapon_all(const android::fs_mgr::Fstab& fstab);
  bool fs_mgr_update_logical_partition(android::fs_mgr::FstabEntry* entry);
-+bool fs_mgr_update_partition_image(android::fs_mgr::FstabEntry* entry);
  
++bool fs_mgr_update_partition_image(android::fs_mgr::FstabEntry* entry);
++bool fs_mgr_detach_partition_image(android::fs_mgr::FstabEntry* entry);
++
  // Returns true if the given fstab entry has verity enabled, *and* the verity
  // device is in "check_at_most_once" mode.
+ bool fs_mgr_verity_is_check_at_most_once(const android::fs_mgr::FstabEntry& entry);
 diff --git a/fs_mgr/libdm/include/libdm/loop_control.h b/fs_mgr/libdm/include/libdm/loop_control.h
 index f5190544e3..389c3edcef 100644
 --- a/fs_mgr/libdm/include/libdm/loop_control.h
@@ -187,7 +226,7 @@ index a1f2ffffa1..0eb438dc12 100644
  
      if (fstab.empty()) {
 diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
-index 849ea75c73..e12580e01f 100644
+index 849ea75c73..3e76641d8a 100644
 --- a/init/first_stage_mount.cpp
 +++ b/init/first_stage_mount.cpp
 @@ -440,6 +440,8 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
@@ -199,7 +238,17 @@ index 849ea75c73..e12580e01f 100644
      if (begin->fs_mgr_flags.logical) {
          if (!fs_mgr_update_logical_partition(&(*begin))) {
              return false;
-@@ -555,6 +557,15 @@ bool FirstStageMountVBootV2::TrySwitchSystemAsRoot() {
+@@ -476,6 +478,9 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
+     if (end) {
+         *end = current;
+     }
++    if (!mounted) {
++        fs_mgr_detach_partition_image(&(*begin));
++    }
+     return mounted;
+ }
+ 
+@@ -555,6 +560,15 @@ bool FirstStageMountVBootV2::TrySwitchSystemAsRoot() {
      return true;
  }
  
@@ -215,7 +264,7 @@ index 849ea75c73..e12580e01f 100644
  static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
      std::optional<std::string> microdroid_vendor_block_dev;
      for (auto entry = fstab->begin(); entry != fstab->end(); entry++) {
-@@ -589,7 +600,7 @@ static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
+@@ -589,7 +603,7 @@ static bool MaybeDeriveMicrodroidVendorDiceNode(Fstab* fstab) {
  }
  
  bool FirstStageMountVBootV2::MountPartitions() {
@@ -224,7 +273,7 @@ index 849ea75c73..e12580e01f 100644
  
      if (IsMicrodroid() && android::virtualization::IsOpenDiceChangesFlagEnabled()) {
          if (!MaybeDeriveMicrodroidVendorDiceNode(&fstab_)) {
-@@ -600,8 +611,11 @@ bool FirstStageMountVBootV2::MountPartitions() {
+@@ -600,8 +614,11 @@ bool FirstStageMountVBootV2::MountPartitions() {
      if (!SkipMountingPartitions(&fstab_, true /* verbose */)) return false;
  
      for (auto current = fstab_.begin(); current != fstab_.end();) {
@@ -237,7 +286,7 @@ index 849ea75c73..e12580e01f 100644
              ++current;
              continue;
          }
-@@ -772,7 +786,8 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
+@@ -772,7 +789,8 @@ bool FirstStageMountVBootV2::GetDmVerityDevices(std::set<std::string>* devices)
              // Don't try to find logical partitions via uevent regeneration.
              logical_partitions.emplace(basename(fstab_entry.blk_device.c_str()));
          } else {

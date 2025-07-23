@@ -1,7 +1,7 @@
 From 5d6a8776d1ef210beed4e4f140af3b372db8b3aa Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 06:15:05 +0800
-Subject: [PATCH 08/22] fs_mgr: Mark dmctl as recovery_available
+Subject: [PATCH 08/24] fs_mgr: Mark dmctl as recovery_available
 
 Change-Id: I833a16c01ac965e7c7dad022cac7b4d95a75deb3
 ---
