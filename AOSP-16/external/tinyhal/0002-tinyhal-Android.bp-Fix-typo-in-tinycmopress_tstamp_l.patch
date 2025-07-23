@@ -1,0 +1,45 @@
+From 113c9be2d514809e9f28542e92258e5ce87a7472 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 24 Jul 2025 00:39:15 +0800
+Subject: [PATCH 2/5] tinyhal: Android.bp: Fix typo in
+ `tinycmopress_tstamp_long`
+
+Change-Id: I05acd239679f34ea916f47584db5d4de7f4874c6
+---
+ audio/Android.bp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/audio/Android.bp b/audio/Android.bp
+index 5a450f0..d675d65 100644
+--- a/audio/Android.bp
++++ b/audio/Android.bp
+@@ -57,7 +57,7 @@ soong_config_module_type {
+     module_type: "cc_defaults",
+     config_namespace: "tinyhal",
+     bool_variables: [
+-        "tinycmopress_tstamp_long",
++        "tinycompress_tstamp_long",
+         "tinyhal_compress_playback",
+         "voice_recof_req_sthal",
+     ],
+@@ -68,7 +68,7 @@ soong_config_module_type {
+ }
+ 
+ soong_config_bool_variable {
+-    name: "tinycmopress_tstamp_long",
++    name: "tinycompress_tstamp_long",
+ }
+ 
+ soong_config_bool_variable {
+@@ -82,7 +82,7 @@ soong_config_bool_variable {
+ tinyhal_cc_defaults {
+     name: "audio.primary.tinyhal-defaults",
+     soong_config_variables: {
+-        tinycmopress_tstamp_long: {
++        tinycompress_tstamp_long: {
+             cppflags: ["-DTINYCOMPRESS_TSTAMP_IS_LONG"],
+         },
+         tinyhal_compress_playback: {
+-- 
+2.39.5
+

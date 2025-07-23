@@ -1,0 +1,115 @@
+From 8b0288451facbb1e48d4947d1025b80aa95c5f54 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 24 Jul 2025 01:23:44 +0800
+Subject: [PATCH 4/5] tinyhal: configmgr: Add support for percentage ctl value
+
+For example:
+```
+<ctl name="Master Playback Volume" val="100%"/>
+```
+
+Change-Id: Ie71db4d1cd70fe154a5af797ef71f059dc6ceefa
+---
+ configmgr/audio_config.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/configmgr/audio_config.c b/configmgr/audio_config.c
+index facf307..02e3c73 100644
+--- a/configmgr/audio_config.c
++++ b/configmgr/audio_config.c
+@@ -132,10 +132,11 @@ struct ctl {
+      * a pointer to the original value string from the config file and will
+      * be converted later into the appropriate type
+      */
++    bool value_is_percent;
+     union {
+         int             integer;
+         const uint8_t   *data;
+-        const char      *string;
++        char            *string;
+     } value;
+ };
+ 
+@@ -436,9 +437,10 @@ static inline struct mixer_ctl *ctl_get_ptr(const struct config_mgr *cm,
+ static int ctl_open(struct config_mgr *cm, struct ctl *pctl)
+ {
+     enum mixer_ctl_type ctl_type;
+-    const char *val_str = pctl->value.string;
++    char *val_str = pctl->value.string;
+     struct mixer_ctl *ctl;
+     int ret;
++    size_t val_str_len;
+ 
+     if (ctl_ref_valid(&pctl->ref)) {
+         /* control already populated on boot */
+@@ -464,6 +466,8 @@ static int ctl_open(struct config_mgr *cm, struct ctl *pctl)
+         return -ENOENT;
+     }
+ 
++    val_str_len = strlen(val_str);
++
+     ctl_type = mixer_ctl_get_type(ctl);
+     switch(ctl_type) {
+         case MIXER_CTL_TYPE_BYTE:
+@@ -479,6 +483,10 @@ static int ctl_open(struct config_mgr *cm, struct ctl *pctl)
+ 
+         case MIXER_CTL_TYPE_BOOL:
+         case MIXER_CTL_TYPE_INT:
++            if (val_str[val_str_len - 1] == '%') {
++                val_str[val_str_len - 1] = '\0';
++                pctl->value_is_percent = true;
++            }
+             if (string_to_int(&pctl->value.integer, val_str) == -EINVAL) {
+                 return -EINVAL;
+             }
+@@ -489,7 +497,8 @@ static int ctl_open(struct config_mgr *cm, struct ctl *pctl)
+             ALOGE_IF((ctl_type == MIXER_CTL_TYPE_BOOL)
+                      && ((unsigned int)pctl->value.integer > 1),
+                      "WARNING: Illegal value for bool control");
+-            ALOGV("Added ctl '%s' value 0x%x", pctl->name, pctl->value.integer);
++            ALOGV("Added ctl '%s' value 0x%x%s", pctl->name, pctl->value.integer,
++                                            pctl->value_is_percent ? "%" : "");
+             break;
+ 
+         case MIXER_CTL_TYPE_ENUM:
+@@ -536,24 +545,32 @@ static void apply_ctls_l(struct config_mgr *cm, struct ctl *pctl, const int ctl_
+             case MIXER_CTL_TYPE_INT:
+                 value_count = mixer_ctl_get_num_values(ctl);
+ 
+-                ALOGV("apply ctl '%s' = 0x%x (%d values)",
++                ALOGV("apply ctl '%s' = 0x%x%s (%d values)",
+                                         mixer_ctl_get_name(ctl),
+                                         pctl->value.integer,
++                                        pctl->value_is_percent ? "%" : "",
+                                         value_count);
+ 
+                 if (pctl->index == INVALID_CTL_INDEX) {
+                     for (vnum = 0; vnum < value_count; ++vnum) {
+-                        err = mixer_ctl_set_value(ctl, vnum, pctl->value.integer);
++                        if (pctl->value_is_percent)
++                            err = mixer_ctl_set_percent(ctl, vnum, pctl->value.integer);
++                        else
++                            err = mixer_ctl_set_value(ctl, vnum, pctl->value.integer);
+                         if (err < 0) {
+                             break;
+                         }
+                     }
+                 } else {
+-                    err = mixer_ctl_set_value(ctl, pctl->index, pctl->value.integer);
++                    if (pctl->value_is_percent)
++                        err = mixer_ctl_set_percent(ctl, pctl->index, pctl->value.integer);
++                    else
++                        err = mixer_ctl_set_value(ctl, pctl->index, pctl->value.integer);
+                 }
+-                ALOGE_IF(err < 0, "Failed to set ctl '%s' to 0x%x",
++                ALOGE_IF(err < 0, "Failed to set ctl '%s' to 0x%x%s",
+                                         mixer_ctl_get_name(ctl),
+-                                        pctl->value.integer);
++                                        pctl->value.integer,
++                                        pctl->value_is_percent ? "%" : "");
+                 break;
+ 
+             case MIXER_CTL_TYPE_BYTE:
+-- 
+2.39.5
+

@@ -1,0 +1,76 @@
+From 0e87ac3457b98c5f7104540e896e3c7610c95750 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 25 Jul 2025 00:54:36 +0800
+Subject: [PATCH 5/5] tinyhal: Android.bp: `s/cppflags/cflags/g`
+
+* `cppflags` didn't get applied at all...
+
+Change-Id: Id38d2a8bf184ec7356d0bf36f4c9b36874e4f17f
+---
+ audio/Android.bp     | 8 ++++----
+ configmgr/Android.bp | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/audio/Android.bp b/audio/Android.bp
+index d675d65..546864c 100644
+--- a/audio/Android.bp
++++ b/audio/Android.bp
+@@ -62,7 +62,7 @@ soong_config_module_type {
+         "voice_recof_req_sthal",
+     ],
+     properties: [
+-        "cppflags",
++        "cflags",
+         "shared_libs",
+     ],
+ }
+@@ -83,13 +83,13 @@ tinyhal_cc_defaults {
+     name: "audio.primary.tinyhal-defaults",
+     soong_config_variables: {
+         tinycompress_tstamp_long: {
+-            cppflags: ["-DTINYCOMPRESS_TSTAMP_IS_LONG"],
++            cflags: ["-DTINYCOMPRESS_TSTAMP_IS_LONG"],
+         },
+         tinyhal_compress_playback: {
+-            cppflags: ["-DTINYHAL_COMPRESS_PLAYBACK"],
++            cflags: ["-DTINYHAL_COMPRESS_PLAYBACK"],
+         },
+         voice_recof_req_sthal: {
+-            cppflags: ["-DENABLE_STHAL_STREAMS"],
++            cflags: ["-DENABLE_STHAL_STREAMS"],
+             shared_libs: ["libscc_audio"],
+         },
+     },
+diff --git a/configmgr/Android.bp b/configmgr/Android.bp
+index 9f96df5..92097af 100644
+--- a/configmgr/Android.bp
++++ b/configmgr/Android.bp
+@@ -54,7 +54,7 @@ soong_config_module_type {
+         "tinyalsa_no_ctl_get_id",
+     ],
+     properties: [
+-        "cppflags",
++        "cflags",
+     ],
+ }
+ 
+@@ -74,13 +74,13 @@ libaudiohalcm_cc_defaults {
+     name: "libaudiohalcm-defaults",
+     soong_config_variables: {
+         libaudiohalcm_continue_on_ctl_open_error: {
+-            cppflags: ["-DLIBAUDIOHALCM_CONTINUE_ON_CTL_OPEN_ERROR"],
++            cflags: ["-DLIBAUDIOHALCM_CONTINUE_ON_CTL_OPEN_ERROR"],
+         },
+         tinyalsa_no_add_new_ctrls: {
+-            cppflags: ["-DTINYALSA_NO_ADD_NEW_CTRLS"],
++            cflags: ["-DTINYALSA_NO_ADD_NEW_CTRLS"],
+         },
+         tinyalsa_no_ctl_get_id: {
+-            cppflags: ["-DTINYALSA_NO_CTL_GET_ID"],
++            cflags: ["-DTINYALSA_NO_CTL_GET_ID"],
+         },
+     },
+ }
+-- 
+2.39.5
+
