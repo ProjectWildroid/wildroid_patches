@@ -1,4 +1,4 @@
-From f9deded5f76b7f6720f75e91ce85909b295f6567 Mon Sep 17 00:00:00 2001
+From a7276a5d70fd0eecfac03fec1dddf2bd0025a929 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 24 Jul 2025 03:01:48 +0800
 Subject: [PATCH 24/24] rootdir: Let the device decide whether or not to enable

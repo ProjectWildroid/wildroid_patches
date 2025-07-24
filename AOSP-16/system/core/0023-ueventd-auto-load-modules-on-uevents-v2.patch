@@ -1,4 +1,4 @@
-From a165f3d54c12fcde9d0e161888f0df723209008a Mon Sep 17 00:00:00 2001
+From d895fc693b112006afff6fa1c877c1ccc10f2a7e Mon Sep 17 00:00:00 2001
 From: Michael Goffioul <michael.goffioul@gmail.com>
 Date: Thu, 8 Sep 2022 15:03:03 +0200
 Subject: [PATCH 23/24] ueventd: auto load modules on uevents (v2)
