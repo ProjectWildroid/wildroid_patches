@@ -1,0 +1,84 @@
+From 29d4b23ee165def2207d88658c07623f3796296e Mon Sep 17 00:00:00 2001
+From: Mauro Rossi <issor.oruam@gmail.com>
+Date: Sat, 17 Apr 2021 11:52:15 +0200
+Subject: [PATCH 3/4] avoid using alpha bits for the framebuffer
+
+They are not supported on older Intel iGPUs for primary planes
+
+Similar to drmfb-composer and drm_framebuffer implementation
+
+[hmtheboy154: apply to drm_hwcomposer gralloc4 BufferInfoMapperMetadata]
+[cafebabe: guard with property]
+
+Change-Id: I52b7bbae9d965329efe2a0cab90c4b3eaaff6468
+---
+ bufferinfo/BufferInfoGetter.cpp         | 19 +++++++++++++++++--
+ bufferinfo/BufferInfoMapperMetadata.cpp |  6 ++++++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/bufferinfo/BufferInfoGetter.cpp b/bufferinfo/BufferInfoGetter.cpp
+index f12db22..8534ce9 100644
+--- a/bufferinfo/BufferInfoGetter.cpp
++++ b/bufferinfo/BufferInfoGetter.cpp
+@@ -33,6 +33,19 @@
+ #include "utils/log.h"
+ #include "utils/properties.h"
+ 
++/* Avoid using alpha bits for the framebuffer */
++bool should_avoid_using_alpha_bits_for_framebuffer() {
++  static bool first_run = true;
++  static bool ret = false;
++  if (first_run) {
++    first_run = false;
++    char proptext[PROPERTY_VALUE_MAX];
++    property_get("vendor.hwc.drm.avoid_using_alpha_bits_for_framebuffer", proptext, "0");
++    ret = strncmp(proptext, "1", 1) == 0;
++  }
++  return ret;
++}
++
+ namespace android {
+ 
+ BufferInfoGetter *BufferInfoGetter::GetInstance() {
+@@ -89,10 +102,12 @@ uint32_t LegacyBufferInfoGetter::ConvertHalFormatToDrm(uint32_t hal_format) {
+       return DRM_FORMAT_BGR888;
+     case HAL_PIXEL_FORMAT_BGRA_8888:
+       return DRM_FORMAT_ARGB8888;
++    case HAL_PIXEL_FORMAT_RGBA_8888:
++      if (!should_avoid_using_alpha_bits_for_framebuffer())
++        return DRM_FORMAT_ABGR8888;
++      [[fallthrough]];
+     case HAL_PIXEL_FORMAT_RGBX_8888:
+       return DRM_FORMAT_XBGR8888;
+-    case HAL_PIXEL_FORMAT_RGBA_8888:
+-      return DRM_FORMAT_ABGR8888;
+     case HAL_PIXEL_FORMAT_RGB_565:
+       return DRM_FORMAT_BGR565;
+     case HAL_PIXEL_FORMAT_YV12:
+diff --git a/bufferinfo/BufferInfoMapperMetadata.cpp b/bufferinfo/BufferInfoMapperMetadata.cpp
+index 125c5c8..74c06ec 100644
+--- a/bufferinfo/BufferInfoMapperMetadata.cpp
++++ b/bufferinfo/BufferInfoMapperMetadata.cpp
+@@ -29,6 +29,8 @@
+ 
+ #include "utils/log.h"
+ 
++extern bool should_avoid_using_alpha_bits_for_framebuffer();
++
+ namespace android {
+ 
+ namespace {
+@@ -117,6 +119,10 @@ auto BufferInfoMapperMetadata::GetBoInfo(buffer_handle_t handle)
+     return {};
+   }
+ 
++  if (should_avoid_using_alpha_bits_for_framebuffer()
++      && bi.format == DRM_FORMAT_ABGR8888)
++    bi.format = DRM_FORMAT_XBGR8888;
++
+   err = mapper.getPixelFormatModifier(handle, &bi.modifiers[0]);
+   if (err != 0) {
+     ALOGE("Failed to get DRM Modifier err=%d", err);
+-- 
+2.39.5
+

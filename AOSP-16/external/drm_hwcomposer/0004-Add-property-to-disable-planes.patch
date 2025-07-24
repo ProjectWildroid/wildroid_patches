@@ -1,0 +1,57 @@
+From 2b2fa7eac9e3481bab143d74e04f042684a75d46 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 14 Jan 2025 20:29:44 +0800
+Subject: [PATCH 4/4] Add property to disable planes
+
+Fixes flickering issue on some old Intel GPUs, like Intel HD Graphics 4600.
+
+Inspired by the following commits:
+https://github.com/projectceladon/drm-hwcomposer/commit/6a7b3af93b83f3540427ea9ec0ec1ecde88b1666
+https://github.com/projectceladon/drm-hwcomposer/commit/025fea82fb07b88ff147b91a8c6cc48ece8ff392
+https://github.com/projectceladon/drm-hwcomposer/commit/082d4fe3e789fb59ddacd84bc9b1c35fe4ed04b0
+
+Change-Id: I2885860fd63417887cf06a60ab67bb7360ba52a1
+---
+ drm/DrmDevice.cpp | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drm/DrmDevice.cpp b/drm/DrmDevice.cpp
+index f6141d4..0c2e722 100644
+--- a/drm/DrmDevice.cpp
++++ b/drm/DrmDevice.cpp
+@@ -32,6 +32,18 @@
+ #include "utils/log.h"
+ #include "utils/properties.h"
+ 
++static bool should_disable_planes() {
++  static bool first_run = true;
++  static bool ret = false;
++  if (first_run) {
++    first_run = false;
++    char proptext[PROPERTY_VALUE_MAX];
++    property_get("vendor.hwc.drm.disable_planes", proptext, "0");
++    ret = strncmp(proptext, "1", 1) == 0;
++  }
++  return ret;
++}
++
+ namespace android {
+ 
+ auto DrmDevice::CreateInstance(std::string const &path,
+@@ -156,6 +168,13 @@ auto DrmDevice::Init(const char *path) -> int {
+     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+     auto plane = DrmPlane::CreateInstance(*this, plane_res->planes[i]);
+ 
++    if (should_disable_planes()) {
++      if (plane->GetType() == DRM_PLANE_TYPE_PRIMARY) {
++        planes_.emplace_back(std::move(plane));
++      }
++      continue;
++    }
++
+     if (plane) {
+       planes_.emplace_back(std::move(plane));
+     }
+-- 
+2.39.5
+
