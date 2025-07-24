@@ -1,7 +1,7 @@
-From a7276a5d70fd0eecfac03fec1dddf2bd0025a929 Mon Sep 17 00:00:00 2001
+From ed3c6f12cb3de58c62277d7d95524ad0aed5057a Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 24 Jul 2025 03:01:48 +0800
-Subject: [PATCH 24/24] rootdir: Let the device decide whether or not to enable
+Subject: [PATCH 24/25] rootdir: Let the device decide whether or not to enable
  kernel module autoloading
 
 Change-Id: Ib111ebfe90f7cb2ac8c7b2c6af48d81c2c0c2b2d

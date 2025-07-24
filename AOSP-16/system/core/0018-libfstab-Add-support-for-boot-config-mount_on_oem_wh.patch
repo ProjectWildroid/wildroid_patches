@@ -1,7 +1,7 @@
-From 2782db34c3b9c5efc9ba98212bf464267a155c96 Mon Sep 17 00:00:00 2001
+From ba40d827ffdd674be365289ee9d181b10709fc7a Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:10:01 +0800
-Subject: [PATCH 18/24] libfstab: Add support for boot config
+Subject: [PATCH 18/25] libfstab: Add support for boot config
  `mount_on_oem_which_contain`
 
 This mounts block devices from physical disks containing paths

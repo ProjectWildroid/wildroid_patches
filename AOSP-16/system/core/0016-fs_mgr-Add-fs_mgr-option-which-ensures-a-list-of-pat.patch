@@ -1,7 +1,7 @@
-From 5e6f396103c3f1eca6b268ce53762ee4a5e12f25 Mon Sep 17 00:00:00 2001
+From 54aafcfc67e882700a02b06f4e08505a69a85213 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 6 Jul 2025 04:31:04 +0800
-Subject: [PATCH 16/24] fs_mgr: Add fs_mgr option which ensures a list of paths
+Subject: [PATCH 16/25] fs_mgr: Add fs_mgr option which ensures a list of paths
  must be accessible in mountpoint
 
 Change-Id: I13dd240f184d2f6a962db169eed929de5d14bea4

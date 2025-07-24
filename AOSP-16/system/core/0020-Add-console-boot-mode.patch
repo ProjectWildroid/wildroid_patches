@@ -1,7 +1,7 @@
-From eef9740c5c6ec23987b7e7f00283db5067bd9171 Mon Sep 17 00:00:00 2001
+From 130769af5fc1d3559cadd0131f3a450bbf008431 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 23 Jul 2025 03:32:11 +0800
-Subject: [PATCH 20/24] Add console boot mode
+Subject: [PATCH 20/25] Add console boot mode
 
 Change-Id: Id51f200ca2c5123cf16212c363d770f503744581
 ---

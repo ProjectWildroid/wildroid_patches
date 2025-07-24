@@ -1,7 +1,7 @@
-From 3ea6d42cb93e62e8a02c859e114a1409bdb4dbf5 Mon Sep 17 00:00:00 2001
+From 87ed74eacc2d0b91c867121fab3a5772e3c9886d Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 04:11:54 +0800
-Subject: [PATCH 15/24] first_stage_mount: Keep blk_device unchanged if not
+Subject: [PATCH 15/25] first_stage_mount: Keep blk_device unchanged if not
  updated to /dev/dm-<N> or /dev/block/loop
 
 Change-Id: Icc8da946c94c7ea1540efa3075fba0ba56264843

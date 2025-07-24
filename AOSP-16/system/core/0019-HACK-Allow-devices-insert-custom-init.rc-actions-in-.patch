@@ -1,7 +1,7 @@
-From 7bd34c14f3f1a99ac948416b54694b5536fe38e9 Mon Sep 17 00:00:00 2001
+From 46484f314ca8663ae1d2c9be97eb1b99fd977f42 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sun, 20 Jul 2025 20:30:36 +0800
-Subject: [PATCH 19/24] HACK: Allow devices insert custom init.rc actions in
+Subject: [PATCH 19/25] HACK: Allow devices insert custom init.rc actions in
  the middle of early-init
 
 Change-Id: I85c92c27925e8de4fc9c8cde174e47fd24a88344
