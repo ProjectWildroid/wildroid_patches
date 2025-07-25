@@ -1,7 +1,7 @@
 From ba45c6554787442981dc18bd8ad488603c298e0a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?G=C3=A9rard=20Parat?= <github@lunique.fr>
 Date: Tue, 26 Mar 2024 14:31:21 +0100
-Subject: [PATCH 7/7] releasetools: Make recovery patch use bsdiff exclusively
+Subject: [PATCH 7/8] releasetools: Make recovery patch use bsdiff exclusively
 
 It seems like switching from minigzip to toybox gzip (bug: 288169261)
 makes imgdiff fail in in this way:
