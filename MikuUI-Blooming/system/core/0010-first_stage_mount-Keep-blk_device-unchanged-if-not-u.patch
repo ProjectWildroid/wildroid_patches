@@ -1,0 +1,30 @@
+From bd668e698f7fe013797885a4b27be78385eaedc8 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 19 Jul 2025 04:11:54 +0800
+Subject: [PATCH 10/20] first_stage_mount: Keep blk_device unchanged if not
+ updated to /dev/dm-<N> or /dev/block/loop
+
+Change-Id: Icc8da946c94c7ea1540efa3075fba0ba56264843
+---
+ init/first_stage_mount.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
+index bbd915c166..01c67d61af 100644
+--- a/init/first_stage_mount.cpp
++++ b/init/first_stage_mount.cpp
+@@ -468,7 +468,10 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
+         if (!mounted) {
+             // blk_device is already updated to /dev/dm-<N> by SetUpDmVerity() above.
+             // Copy it from the begin iterator.
+-            current->blk_device = begin->blk_device;
++            if (begin->fs_mgr_flags.avb ||
++                android::base::StartsWith(begin->blk_device, "/dev/block/loop")) {
++                current->blk_device = begin->blk_device;
++            }
+             mounted = (fs_mgr_do_mount_one(*current) == 0);
+         }
+     }
+-- 
+2.39.5
+

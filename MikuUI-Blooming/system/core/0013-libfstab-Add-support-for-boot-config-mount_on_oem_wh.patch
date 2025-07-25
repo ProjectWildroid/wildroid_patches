@@ -1,7 +1,7 @@
-From ccf2417c1fd2ad5f617f72bcdae5153c314cef41 Mon Sep 17 00:00:00 2001
+From 99e2c4424b3e2c409fcf22d39503b73a99afd5b3 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:10:01 +0800
-Subject: [PATCH] libfstab: Add support for boot config
+Subject: [PATCH 13/20] libfstab: Add support for boot config
  `mount_on_oem_which_contain`
 
 This mounts block devices from physical disks containing paths
@@ -9,11 +9,11 @@ specified by the boot config value, separated by ";", on /oem.
 
 Change-Id: Iafd67682f23922db163d97da35138f758d6a4af1
 ---
- fs_mgr/libfstab/fstab.cpp | 45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ fs_mgr/libfstab/fstab.cpp | 58 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/fs_mgr/libfstab/fstab.cpp b/fs_mgr/libfstab/fstab.cpp
-index 80b0304c53..90495b9331 100644
+index 80b0304c53..75c8ede36f 100644
 --- a/fs_mgr/libfstab/fstab.cpp
 +++ b/fs_mgr/libfstab/fstab.cpp
 @@ -26,6 +26,7 @@
@@ -24,7 +24,7 @@ index 80b0304c53..90495b9331 100644
  #include <unordered_map>
  #include <utility>
  #include <vector>
-@@ -907,9 +908,53 @@ bool SkipMountWithConfig(const std::string& skip_mount_config, Fstab* fstab, boo
+@@ -907,9 +908,66 @@ bool SkipMountWithConfig(const std::string& skip_mount_config, Fstab* fstab, boo
      return true;
  }
  
@@ -35,6 +35,12 @@ index 80b0304c53..90495b9331 100644
 +    if (!fs_mgr_get_boot_config("mount_on_oem_which_contain", &contain)) return;
 +    LINFO << __FUNCTION__ << "(): Boot config value: " << contain;
 +
++#if defined(__ANDROID_RAMDISK__)
++    // Block devices like USB drives may need some time to appear...
++    LINFO << __FUNCTION__ << "(): Delaying";
++    sleep(3);
++#endif
++
 +    std::vector<std::string> blk_devices;
 +
 +    for (const auto& entry : std::filesystem::directory_iterator("/sys/block")) {
@@ -42,6 +48,13 @@ index 80b0304c53..90495b9331 100644
 +        if (!android::base::StartsWith(name, ".") && !android::base::StartsWith(name, "dm-") &&
 +            !android::base::StartsWith(name, "loop") && !android::base::StartsWith(name, "ram") &&
 +            !android::base::StartsWith(name, "zram")) {
++            for (const auto& sentry : std::filesystem::directory_iterator("/sys/block/" + name)) {
++                std::string sname = sentry.path().filename().string();
++                if (android::base::StartsWith(sname, name)) {
++                    LINFO << __FUNCTION__ << "(): Found block device " << sname;
++                    blk_devices.push_back(sname);
++                }
++            }
 +            LINFO << __FUNCTION__ << "(): Found block device " << name;
 +            blk_devices.push_back(name);
 +        }

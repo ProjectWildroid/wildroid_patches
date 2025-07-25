@@ -1,7 +1,7 @@
-From b56d368b5a51843224c7bb8660b90c2a60336b72 Mon Sep 17 00:00:00 2001
+From b46b4daefd3942cdd5baca89742bf971ba858bcc Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:46:29 +0800
-Subject: [PATCH 09/17] fs_mgr: Add virtiofs to supported fs list
+Subject: [PATCH 05/20] fs_mgr: Add virtiofs to supported fs list
 
 Change-Id: I25986ee90782ef75f284c4f628ed62989f6277cb
 ---
