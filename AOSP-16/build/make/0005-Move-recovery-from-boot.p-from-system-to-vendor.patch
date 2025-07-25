@@ -1,0 +1,61 @@
+From 99f1576eee0a23a6978ce9eb67072eb8cefc4038 Mon Sep 17 00:00:00 2001
+From: dianlujitao <dianlujitao@lineageos.org>
+Date: Sat, 12 Sep 2020 13:48:26 +0800
+Subject: [PATCH 5/7] Move recovery-from-boot.p from /system to /vendor
+
+The file was missed when moving recovery resources, but the assertion
+path was changed, as a result non-Treble devices failed to build.
+
+Fixes: Ia4045bd67ffb3d899efa8d20dab4c4299b87ee5f
+Change-Id: Ib7822a9bd5b1a2ab7e762e9fb35dbb22291a3a76
+---
+ tools/releasetools/common.py              | 8 +-------
+ tools/releasetools/make_recovery_patch.py | 2 +-
+ 2 files changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/tools/releasetools/common.py b/tools/releasetools/common.py
+index 10d6816ae2..96f2903c9b 100644
+--- a/tools/releasetools/common.py
++++ b/tools/releasetools/common.py
+@@ -3816,12 +3816,10 @@ def MakeRecoveryPatch(input_dir, output_sink, recovery_img, boot_img,
+     # In this case, the output sink is rooted at VENDOR
+     recovery_img_path = "etc/recovery.img"
+     recovery_resource_dat_path = "VENDOR/etc/recovery-resource.dat"
+-    sh_dir = "bin"
+   else:
+     # In this case the output sink is rooted at SYSTEM
+     recovery_img_path = "vendor/etc/recovery.img"
+     recovery_resource_dat_path = "SYSTEM/vendor/etc/recovery-resource.dat"
+-    sh_dir = "vendor/bin"
+ 
+   if full_recovery_image:
+     output_sink(recovery_img_path, recovery_img.data)
+@@ -3905,11 +3903,7 @@ fi
+ 
+   # The install script location moved from /system/etc to /system/bin in the L
+   # release. In the R release it is in VENDOR/bin or SYSTEM/vendor/bin.
+-  sh_location = os.path.join(sh_dir, "install-recovery.sh")
+-
+-  logger.info("putting script in %s", sh_location)
+-
+-  output_sink(sh_location, sh.encode())
++  output_sink("bin/install-recovery.sh", sh.encode())
+ 
+ 
+ class DynamicPartitionUpdate(object):
+diff --git a/tools/releasetools/make_recovery_patch.py b/tools/releasetools/make_recovery_patch.py
+index 1497d69ed7..6be9417024 100644
+--- a/tools/releasetools/make_recovery_patch.py
++++ b/tools/releasetools/make_recovery_patch.py
+@@ -53,7 +53,7 @@ def main(argv):
+   if board_uses_vendorimage:
+     target_files_dir = "VENDOR"
+   else:
+-    target_files_dir = "SYSTEM"
++    target_files_dir = "SYSTEM/vendor"
+ 
+   def output_sink(fn, data):
+     with open(os.path.join(output_dir, target_files_dir,
+-- 
+2.39.5
+
