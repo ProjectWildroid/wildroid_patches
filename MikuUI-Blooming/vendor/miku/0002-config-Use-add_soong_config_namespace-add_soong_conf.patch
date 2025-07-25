@@ -1,7 +1,7 @@
 From 2ffb53b847d6915b63152ec8ef0c8f2a9c911fde Mon Sep 17 00:00:00 2001
 From: LuK1337 <priv.luk@gmail.com>
 Date: Sun, 11 May 2025 13:09:52 +0200
-Subject: [PATCH 2/2] config: Use
+Subject: [PATCH 2/3] config: Use
  add_soong_config_namespace/add_soong_config_var macros
 
 Test: m nothing and compare out/soong/soong.lineage_*.variables
