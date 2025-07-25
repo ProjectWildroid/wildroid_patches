@@ -1,0 +1,38 @@
+From 2ffb53b847d6915b63152ec8ef0c8f2a9c911fde Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Sun, 11 May 2025 13:09:52 +0200
+Subject: [PATCH 2/2] config: Use
+ add_soong_config_namespace/add_soong_config_var macros
+
+Test: m nothing and compare out/soong/soong.lineage_*.variables
+Change-Id: I802f4f7eb37d520fd74599e2b673a5b2368c5d09
+---
+ config/BoardConfigSoong.mk | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/config/BoardConfigSoong.mk b/config/BoardConfigSoong.mk
+index 264e2ea..b1307b9 100644
+--- a/config/BoardConfigSoong.mk
++++ b/config/BoardConfigSoong.mk
+@@ -21,16 +21,8 @@ EXPORT_TO_SOONG := \
+ # Documentation here:
+ # https://github.com/LineageOS/android_build_soong/commit/8328367c44085b948c003116c0ed74a047237a69
+ 
+-SOONG_CONFIG_NAMESPACES += mikuVarsPlugin
+-
+-SOONG_CONFIG_mikuVarsPlugin :=
+-
+-define addVar
+-  SOONG_CONFIG_mikuVarsPlugin += $(1)
+-  SOONG_CONFIG_mikuVarsPlugin_$(1) := $$(subst ",\",$$($1))
+-endef
+-
+-$(foreach v,$(EXPORT_TO_SOONG),$(eval $(call addVar,$(v))))
++$(call add_soong_config_namespace,mikuVarsPlugin)
++$(foreach v,$(EXPORT_TO_SOONG),$(eval $(call add_soong_config_var,mikuVarsPlugin,$(v))))
+ 
+ SOONG_CONFIG_NAMESPACES += mikuGlobalVars
+ SOONG_CONFIG_mikuGlobalVars += \
+-- 
+2.39.5
+

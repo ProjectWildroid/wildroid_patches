@@ -1,7 +1,8 @@
-From 1429da632fe2c32731349ebfc51fc85b284a2c60 Mon Sep 17 00:00:00 2001
+From 2ce5845b338f429629f9697bfa34be3346129ac5 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 17 Jul 2025 10:28:17 +0000
-Subject: [PATCH] NOUPSTREAM: Disable components that duplicates with Wildroid
+Subject: [PATCH 1/2] NOUPSTREAM: Disable components that duplicates with
+ Wildroid
 
 Change-Id:
 ---

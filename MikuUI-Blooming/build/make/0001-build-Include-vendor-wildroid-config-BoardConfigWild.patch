@@ -1,8 +1,7 @@
-From 96091ecbcbb23be8fba103f99023bbe14b5e2d92 Mon Sep 17 00:00:00 2001
+From cec4e1250548bab75ae6ead67144e048e967d129 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 17 Jul 2025 00:11:12 +0800
-Subject: [PATCH 1/2] build: Include
- vendor/wildroid/config/BoardConfigWildroid.mk
+Subject: [PATCH] build: Include vendor/wildroid/config/BoardConfigWildroid.mk
 
 Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
 ---
@@ -10,18 +9,18 @@ Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
  1 file changed, 2 insertions(+)
 
 diff --git a/core/config.mk b/core/config.mk
-index fffc37e8f5..bb03f912c7 100644
+index fffc37e8f5..362686c597 100644
 --- a/core/config.mk
 +++ b/core/config.mk
-@@ -475,6 +475,8 @@ ifneq ($(MIKU_BUILD),)
- include vendor/miku/config/BoardConfigMiku.mk
- endif
+@@ -471,6 +471,8 @@ endif
+ # See envsetup.mk for a description of SCAN_EXCLUDE_DIRS
+ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
  
 +include vendor/wildroid/config/BoardConfigWildroid.mk
 +
- # The build system exposes several variables for where to find the kernel
- # headers:
- #   TARGET_DEVICE_KERNEL_HEADERS is automatically created for the current
+ ifneq ($(MIKU_BUILD),)
+ include vendor/miku/config/BoardConfigMiku.mk
+ endif
 -- 
 2.39.5
 
