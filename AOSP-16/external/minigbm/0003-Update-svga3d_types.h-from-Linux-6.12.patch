@@ -1,7 +1,7 @@
-From 18348e658fc49d6d4fad059b86f818808390ba9f Mon Sep 17 00:00:00 2001
+From 23629f61e17dc9039271b68c05ef4eb7b83845af Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 26 Nov 2024 19:12:45 +0800
-Subject: [PATCH 3/7] Update svga3d_types.h from Linux 6.12
+Subject: [PATCH 03/12] Update svga3d_types.h from Linux 6.12
 
 Change-Id: I6cab17f4f38148fee4038b9bf164e10f44fa20cb
 ---

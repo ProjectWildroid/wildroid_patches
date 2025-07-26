@@ -1,7 +1,7 @@
-From 9cb535333c3dec4cf0b787c718251eeb92dc42df Mon Sep 17 00:00:00 2001
+From 6128164194c7747244baf75a8aee4e69c8baa6e0 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 20:58:01 +0800
-Subject: [PATCH 6/7] Fix amdgpu drv build on Android
+Subject: [PATCH 06/12] Fix amdgpu drv build on Android
 
 Change-Id: I7236486b3b775b1100c697184a691183625416fc
 ---

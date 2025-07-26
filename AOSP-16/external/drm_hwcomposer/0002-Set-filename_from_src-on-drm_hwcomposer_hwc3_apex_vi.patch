@@ -1,7 +1,7 @@
 From b525e4347bcb3ee40baf7cca47a7ecfcc9ae2deb Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Mon, 21 Jul 2025 00:22:54 +0800
-Subject: [PATCH 2/4] Set filename_from_src on drm_hwcomposer_hwc3_apex_vintf
+Subject: [PATCH 2/5] Set filename_from_src on drm_hwcomposer_hwc3_apex_vintf
 
 Change-Id: Ic039c41a735ce219832a4ee7c4fe7a1c59134b88
 ---

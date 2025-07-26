@@ -1,7 +1,7 @@
 From 29d4b23ee165def2207d88658c07623f3796296e Mon Sep 17 00:00:00 2001
 From: Mauro Rossi <issor.oruam@gmail.com>
 Date: Sat, 17 Apr 2021 11:52:15 +0200
-Subject: [PATCH 3/4] avoid using alpha bits for the framebuffer
+Subject: [PATCH 3/5] avoid using alpha bits for the framebuffer
 
 They are not supported on older Intel iGPUs for primary planes
 

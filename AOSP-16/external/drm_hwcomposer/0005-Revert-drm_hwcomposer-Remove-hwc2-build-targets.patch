@@ -1,0 +1,50 @@
+From 8a26c07dc216b59d1a71d0e68965e272ef98eefb Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 26 Jul 2025 23:14:35 +0800
+Subject: [PATCH 5/5] Revert "drm_hwcomposer: Remove hwc2 build targets"
+
+This reverts commit b50482dbf55a1e464e4b7f13ac8f234f3b282a82.
+---
+ Android.bp | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/Android.bp b/Android.bp
+index 8298e44..1a2c5c5 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -154,6 +154,32 @@ filegroup {
+     ],
+ }
+ 
++// Kept only for compatibility with older Android version. Please do not use!
++cc_library_static {
++    name: "drm_hwcomposer",
++    defaults: ["hwcomposer.drm_defaults"],
++    srcs: [":drm_hwcomposer_common"],
++}
++
++cc_library_shared {
++    name: "hwcomposer.drm",
++    defaults: ["hwcomposer.drm_defaults"],
++    srcs: [
++        ":drm_hwcomposer_common",
++        "bufferinfo/legacy/BufferInfoLibdrm.cpp",
++    ],
++    cflags: ["-DUSE_IMAPPER4_METADATA_API"],
++}
++
++cc_library_shared {
++    name: "hwcomposer.drm_minigbm",
++    defaults: ["hwcomposer.drm_defaults"],
++    srcs: [
++        ":drm_hwcomposer_common",
++        "bufferinfo/legacy/BufferInfoMinigbm.cpp",
++    ],
++}
++
+ cc_defaults {
+     name: "android.hardware.composer.hwc3-service.drm.defaults",
+ 
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
-From 2be4c9fdf68409feff837045db73509599becc0c Mon Sep 17 00:00:00 2001
+From d05d81bb4d9fc4d8becc9d1972436f442c5b3601 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 23 Nov 2024 16:45:37 +0800
-Subject: [PATCH 1/7] Apply vmware_minigbm.patch from openFyde
+Subject: [PATCH 01/12] Apply vmware_minigbm.patch from openFyde
 
 Thanks to openFyde for the patch and hmtheboy154 for pointing it out
 

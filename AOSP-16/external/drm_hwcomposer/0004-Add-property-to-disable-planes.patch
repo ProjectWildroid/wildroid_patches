@@ -1,7 +1,7 @@
 From 2b2fa7eac9e3481bab143d74e04f042684a75d46 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 14 Jan 2025 20:29:44 +0800
-Subject: [PATCH 4/4] Add property to disable planes
+Subject: [PATCH 4/5] Add property to disable planes
 
 Fixes flickering issue on some old Intel GPUs, like Intel HD Graphics 4600.
 
