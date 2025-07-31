@@ -1,7 +1,7 @@
 From 99f1576eee0a23a6978ce9eb67072eb8cefc4038 Mon Sep 17 00:00:00 2001
 From: dianlujitao <dianlujitao@lineageos.org>
 Date: Sat, 12 Sep 2020 13:48:26 +0800
-Subject: [PATCH 5/8] Move recovery-from-boot.p from /system to /vendor
+Subject: [PATCH 5/9] Move recovery-from-boot.p from /system to /vendor
 
 The file was missed when moving recovery resources, but the assertion
 path was changed, as a result non-Treble devices failed to build.

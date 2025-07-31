@@ -1,7 +1,7 @@
 From c7ce9ac2bd1973fa59e97035da1410f66a841ffe Mon Sep 17 00:00:00 2001
 From: Christian Oder <myself5@carbonrom.org>
 Date: Sun, 6 Sep 2020 14:54:15 +0200
-Subject: [PATCH 3/8] build_image: Allow disabling custom inode count
+Subject: [PATCH 3/9] build_image: Allow disabling custom inode count
  calculation
 
 This allows us to skip custom inode count calculation by setting

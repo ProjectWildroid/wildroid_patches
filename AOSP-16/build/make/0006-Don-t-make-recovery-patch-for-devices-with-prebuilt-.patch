@@ -1,7 +1,7 @@
 From b603ed1cd35c66fa904583aeaec57193bd476807 Mon Sep 17 00:00:00 2001
 From: TheScarastic <warabhishek@gmail.com>
 Date: Sat, 12 Sep 2020 17:28:03 +0000
-Subject: [PATCH 6/8] Don't make recovery patch for devices with prebuilt
+Subject: [PATCH 6/9] Don't make recovery patch for devices with prebuilt
  vendor
 
 Change-Id: I05c0155e6331bfeccd4ad545e003fa3fa3498044

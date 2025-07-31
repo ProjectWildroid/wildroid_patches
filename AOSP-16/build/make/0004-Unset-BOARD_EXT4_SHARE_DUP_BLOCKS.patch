@@ -1,7 +1,7 @@
 From d191cf2039252fb9c10172948923602dc5126a35 Mon Sep 17 00:00:00 2001
 From: LuK1337 <priv.luk@gmail.com>
 Date: Fri, 11 Sep 2020 15:34:56 +0200
-Subject: [PATCH 4/8] Unset BOARD_EXT4_SHARE_DUP_BLOCKS
+Subject: [PATCH 4/9] Unset BOARD_EXT4_SHARE_DUP_BLOCKS
 
 * This allows us to remount ext4 partitions read-write
   on devices with dynamic partitions.
