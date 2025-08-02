@@ -1,7 +1,7 @@
 From f3101ae62518216c8c7de34b924d9c217d47c985 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 21:07:35 +0800
-Subject: [PATCH 14/25] first_stage_mount: Do not initialize block device for
+Subject: [PATCH 14/26] first_stage_mount: Do not initialize block device for
  tmpfs/virtiofs mount
 
 Change-Id: I8a1a3e154dfc05a8167326aa754067b601839d79

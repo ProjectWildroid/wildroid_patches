@@ -1,0 +1,32 @@
+From dd996653d4b85f3aad3f5ee8150bca3bbd5f1491 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 2 Aug 2025 16:32:00 +0000
+Subject: [PATCH 26/26] fs_mgr: Don't fail on unable to open max_comp_streams
+
+The sysfs node has been removed in Linux kernel v6.15
+
+Change-Id: Ic3faaddb2097c5091d3a7dbd32f830679270d516
+---
+ fs_mgr/fs_mgr.cpp | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
+index 50f380de2c..b8389eb7e9 100644
+--- a/fs_mgr/fs_mgr.cpp
++++ b/fs_mgr/fs_mgr.cpp
+@@ -2205,10 +2205,9 @@ bool fs_mgr_swapon_all(const Fstab& fstab) {
+                         fopen(ZRAM_CONF_MCS, "re"), fclose};
+                 if (zram_mcs_fp == nullptr) {
+                     LERROR << "Unable to open zram conf comp device " << ZRAM_CONF_MCS;
+-                    ret = false;
+-                    continue;
++                } else {
++                    fprintf(zram_mcs_fp.get(), "%d\n", entry.max_comp_streams);
+                 }
+-                fprintf(zram_mcs_fp.get(), "%d\n", entry.max_comp_streams);
+             }
+ 
+             auto zram_fp =
+-- 
+2.39.5
+

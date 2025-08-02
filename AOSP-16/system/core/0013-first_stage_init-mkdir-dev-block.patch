@@ -1,7 +1,7 @@
 From f43aea27d646b3feff706cb5b2dd869c24264dd1 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 21:32:57 +0800
-Subject: [PATCH 13/25] first_stage_init: mkdir /dev/block
+Subject: [PATCH 13/26] first_stage_init: mkdir /dev/block
 
 * So that we can mknod() in there without having block devices
 

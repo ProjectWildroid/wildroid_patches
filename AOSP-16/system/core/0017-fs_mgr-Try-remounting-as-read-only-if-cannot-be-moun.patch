@@ -1,7 +1,7 @@
 From 48cd30b44177fe56559e333663186cf7fe321533 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 05:37:46 +0800
-Subject: [PATCH 17/25] fs_mgr: Try remounting as read-only if cannot be
+Subject: [PATCH 17/26] fs_mgr: Try remounting as read-only if cannot be
  mounted as read-write
 
 Change-Id: I1cfb02fb7bc94470968bc20b7a822a5e5198d411

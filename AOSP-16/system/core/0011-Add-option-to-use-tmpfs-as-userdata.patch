@@ -1,7 +1,7 @@
 From f4cfd60f51017bee69283d206295f2413cc6fc7f Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 05:39:31 +0800
-Subject: [PATCH 11/25] Add option to use tmpfs as userdata
+Subject: [PATCH 11/26] Add option to use tmpfs as userdata
 
 * Helps testing ROM on devices containing important userdata
 * Set GSI running prop to offset gatekeeper UID, to avoid
