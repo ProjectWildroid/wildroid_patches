@@ -1,7 +1,7 @@
 From b4906a72362a61237762b52e314ed49edf29cd79 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 20:18:29 +0800
-Subject: [PATCH 05/12] Add generic_x86 modules
+Subject: [PATCH 05/30] Add generic_x86 modules
 
 Change-Id: Icf63f833383ef2662ea168e234952e180a613a34
 ---

@@ -1,0 +1,17 @@
+From b44ccfa80d4206dc6b2cb0e620d0f811217fdda5 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 5 Aug 2025 04:11:49 +0800
+Subject: [PATCH 14/30] ANNOTATION: External driver - begin
+
+Change-Id: I34d3a95cb3e92f5f0ea594454faa7526d2aa700e
+---
+ .annotation | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 .annotation
+
+diff --git a/.annotation b/.annotation
+new file mode 100644
+index 0000000..e69de29
+-- 
+2.39.5
+

@@ -1,18 +1,18 @@
-From 6128164194c7747244baf75a8aee4e69c8baa6e0 Mon Sep 17 00:00:00 2001
+From 040d56237990d35eddd78c9d79540aba2834c78d Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 19 Jul 2025 20:58:01 +0800
-Subject: [PATCH 06/12] Fix amdgpu drv build on Android
+Subject: [PATCH 06/30] Fix amdgpu drv build on Android
 
 Change-Id: I7236486b3b775b1100c697184a691183625416fc
 ---
- Android.bp | 10 ++++++++++
+ Android.bp | 16 ++++++++++++++++
  amdgpu.h   |  1 +
  dri.c      | 26 ++++++++++++++------------
- 3 files changed, 25 insertions(+), 12 deletions(-)
+ 3 files changed, 31 insertions(+), 12 deletions(-)
  create mode 120000 amdgpu.h
 
 diff --git a/Android.bp b/Android.bp
-index e88fe7a..cd0ee56 100644
+index e88fe7a..cb92c31 100644
 --- a/Android.bp
 +++ b/Android.bp
 @@ -38,6 +38,7 @@ filegroup {
@@ -39,6 +39,19 @@ index e88fe7a..cd0ee56 100644
      product_variables: {
          platform_sdk_version: {
              cflags: ["-DANDROID_API_LEVEL=%d"],
+@@ -191,6 +201,12 @@ cc_library {
+             allow_undefined_symbols: true,
+             header_libs: ["libdrm_headers"],
+         },
++        linux_glibc: {
++            cflags: [
++                "-DUTIL_ARCH_LITTLE_ENDIAN=1",
++                "-DUTIL_ARCH_BIG_ENDIAN=0",
++            ],
++        },
+         android: {
+             shared_libs: [
+                 "libcutils",
 diff --git a/amdgpu.h b/amdgpu.h
 new file mode 120000
 index 0000000..4f94c15

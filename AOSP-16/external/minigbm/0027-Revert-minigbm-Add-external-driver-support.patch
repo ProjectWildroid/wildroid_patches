@@ -1,0 +1,77 @@
+From ef747438f54dcafb93db65a350baf954fd38b724 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 5 Aug 2025 04:20:09 +0800
+Subject: [PATCH 27/30] Revert "minigbm: Add external driver support"
+
+This reverts commit 3d361fa6a424f7e14d76de672781015a314820d5.
+---
+ cros_gralloc/cros_gralloc_driver.cc | 13 +------------
+ drv.c                               | 10 ----------
+ 2 files changed, 1 insertion(+), 22 deletions(-)
+
+diff --git a/cros_gralloc/cros_gralloc_driver.cc b/cros_gralloc/cros_gralloc_driver.cc
+index 6fda06c..7a653e6 100644
+--- a/cros_gralloc/cros_gralloc_driver.cc
++++ b/cros_gralloc/cros_gralloc_driver.cc
+@@ -94,7 +94,6 @@ std::shared_ptr<cros_gralloc_driver> cros_gralloc_driver::get_instance()
+ 	return s_instance;
+ }
+ 
+-#ifndef DRV_EXTERNAL
+ static struct driver *init_try_node(int idx, char const *str)
+ {
+ 	int fd;
+@@ -152,21 +151,11 @@ static struct driver *init_try_nodes()
+ 	return nullptr;
+ }
+ 
+-#else
+-
+-static struct driver *init_try_nodes()
+-{
+-	return drv_create(-1);
+-}
+-
+-#endif
+-
+ static void drv_destroy_and_close(struct driver *drv)
+ {
+ 	int fd = drv_get_fd(drv);
+ 	drv_destroy(drv);
+-	if (fd != -1)
+-		close(fd);
++	close(fd);
+ }
+ 
+ static bool is_running_with_software_rendering()
+diff --git a/drv.c b/drv.c
+index 328d63b..19a5507 100644
+--- a/drv.c
++++ b/drv.c
+@@ -28,15 +28,6 @@
+ #include "drv_priv.h"
+ #include "util.h"
+ 
+-#ifdef DRV_EXTERNAL
+-extern struct backend *init_external_backend();
+-
+-static const struct backend *drv_get_backend(int fd)
+-{
+-	return init_external_backend();
+-}
+-#else
+-
+ #ifdef DRV_AMDGPU
+ extern const struct backend backend_amdgpu;
+ #endif
+@@ -129,7 +120,6 @@ static const struct backend *drv_get_backend(int fd)
+ 	drmFreeVersion(drm_version);
+ 	return NULL;
+ }
+-#endif
+ 
+ struct driver *drv_create(int fd)
+ {
+-- 
+2.39.5
+

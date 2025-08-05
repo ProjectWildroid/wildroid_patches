@@ -1,7 +1,7 @@
-From 16622ec5d10cc81cb3c5cfd9385b5f99bdb092b8 Mon Sep 17 00:00:00 2001
+From b9d272ab9a2dd36b78db2347fac1bd7280cd3259 Mon Sep 17 00:00:00 2001
 From: Chia-I Wu <olv@google.com>
 Date: Tue, 20 Aug 2024 08:59:59 -0700
-Subject: [PATCH 09/12] hbm: implement dri interface for amdgpu
+Subject: [PATCH 09/30] hbm: implement dri interface for amdgpu
 
 When both DRV_AMDGPU and DRV_HBM_HELPER are defined, amdgpu will switch
 to this hbm-based implementation.

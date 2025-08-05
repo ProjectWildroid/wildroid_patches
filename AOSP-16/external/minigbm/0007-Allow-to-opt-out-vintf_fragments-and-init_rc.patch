@@ -1,7 +1,7 @@
-From 627169b9c7529b068bd6339e6e40068951a02ef3 Mon Sep 17 00:00:00 2001
+From 98dc08cc7f400e4124339ad6543370ab7ca6d5af Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Mon, 21 Jul 2025 00:05:42 +0800
-Subject: [PATCH 07/12] Allow to opt-out vintf_fragments and init_rc
+Subject: [PATCH 07/30] Allow to opt-out vintf_fragments and init_rc
 
 Change-Id: Ie3cc9da735d674dc457f20697f21b7b6d7b951ff
 ---

@@ -1,7 +1,7 @@
-From 7a3081aab44f94cea9cbd0878ea910f591f2a41d Mon Sep 17 00:00:00 2001
+From 740b7308f04d1e13af5150a1849229aea3e2b521 Mon Sep 17 00:00:00 2001
 From: Chia-I Wu <olvaffe@gmail.com>
 Date: Wed, 27 Nov 2024 09:47:13 -0800
-Subject: [PATCH 11/12] fixup! hbm: implement dri interface for amdgpu
+Subject: [PATCH 11/30] fixup! hbm: implement dri interface for amdgpu
 
 ---
  hbm.c | 16 ++++++++++++----

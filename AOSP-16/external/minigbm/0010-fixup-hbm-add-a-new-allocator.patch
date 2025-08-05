@@ -1,7 +1,7 @@
-From 9a449babb7e860fa95be8796caccb56d204b1c22 Mon Sep 17 00:00:00 2001
+From 9b2cc1f722e2bacd3b727b84064cd6d9f63c729d Mon Sep 17 00:00:00 2001
 From: hmtheboy154 <buingoc67@gmail.com>
 Date: Sat, 23 Nov 2024 07:20:30 -0500
-Subject: [PATCH 10/12] fixup! hbm: add a new allocator
+Subject: [PATCH 10/30] fixup! hbm: add a new allocator
 
 Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
 ---

@@ -1,7 +1,7 @@
-From 6efe6a7a6f9eaec2bead1509185ff1107b5c1613 Mon Sep 17 00:00:00 2001
+From 625bf3d147486b41ab87ea37ede5606fc5bc5f36 Mon Sep 17 00:00:00 2001
 From: Chia-I Wu <olv@google.com>
 Date: Sun, 11 Aug 2024 16:39:21 -0700
-Subject: [PATCH 08/12] hbm: add a new allocator
+Subject: [PATCH 08/30] hbm: add a new allocator
 
 It uses libhbm_minigbm provided by https://crates.io/crates/hbm-minigbm.
 

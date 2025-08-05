@@ -1,0 +1,31 @@
+From 19a6a22a3d89d1f2532717bec17733644538a2c9 Mon Sep 17 00:00:00 2001
+From: hmtheboy154 <buingoc67@gmail.com>
+Date: Sun, 2 Mar 2025 10:15:04 -0500
+Subject: [PATCH 26/30] gbm_mesa: Adding a few #include reported when building
+ on A15
+
+Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
+---
+ gbm_mesa_driver/gbm_mesa_internals.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gbm_mesa_driver/gbm_mesa_internals.cpp b/gbm_mesa_driver/gbm_mesa_internals.cpp
+index f26f533..d1eb457 100644
+--- a/gbm_mesa_driver/gbm_mesa_internals.cpp
++++ b/gbm_mesa_driver/gbm_mesa_internals.cpp
+@@ -27,10 +27,12 @@ extern "C" {
+ #include "util.h"
+ #include <algorithm>
+ #include <array>
++#include <assert.h>
+ #include <cutils/properties.h>
+ #include <dlfcn.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <functional>
+ #include <gbm.h>
+ #include <glob.h>
+ #include <iterator>
+-- 
+2.39.5
+
