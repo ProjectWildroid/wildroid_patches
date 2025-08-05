@@ -1,0 +1,31 @@
+From e373c0065fc60b5569212471f481c724bb942677 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 5 Aug 2025 21:14:07 +0800
+Subject: [PATCH] HACK: AHardwareBufferUtils: Return RGBA color type for BGRA
+ format
+
+Fixes this error when using BGRA native window format:
+
+[skia] "validate_backend_texture failed due to an invalid format and colorType combination" in {bool validate_backend_texture(const GrCaps *, const GrBackendTexture &, int, GrColorType, bool)}
+
+Change-Id: I3d697098c1d562f877929840dc9afec337fea10d
+---
+ src/gpu/android/AHardwareBufferUtils.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gpu/android/AHardwareBufferUtils.cpp b/src/gpu/android/AHardwareBufferUtils.cpp
+index d796f2f732..2d68d47091 100644
+--- a/src/gpu/android/AHardwareBufferUtils.cpp
++++ b/src/gpu/android/AHardwareBufferUtils.cpp
+@@ -41,7 +41,7 @@ SkColorType GetSkColorTypeFromBufferFormat(uint32_t bufferFormat) {
+ #endif
+ #ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
+         case AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM:
+-            return kBGRA_8888_SkColorType;
++            return kRGBA_8888_SkColorType;  // HACK
+ #endif
+         default:
+             // Given that we only use this texture as a source, colorType will not impact how Skia
+-- 
+2.39.5
+
