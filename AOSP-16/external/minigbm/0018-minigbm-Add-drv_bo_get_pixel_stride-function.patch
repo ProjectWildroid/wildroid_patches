@@ -1,4 +1,4 @@
-From 3bc5fb3cdfcf465553922b8655e520df1405f3aa Mon Sep 17 00:00:00 2001
+From 661b01f92bdb273795840976c3b486bafe997150 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Thu, 8 Sep 2022 18:41:09 +0300
 Subject: [PATCH 18/30] minigbm: Add drv_bo_get_pixel_stride function

@@ -1,4 +1,4 @@
-From f7a43949851adb1ac4e7fbe856945666f70ab037 Mon Sep 17 00:00:00 2001
+From 5ac38d8c1e2c0063df67c47cc49412511968c4d7 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 1 Oct 2023 16:17:17 +0300
 Subject: [PATCH 25/30] RPI4: Add HW codecs support and constraints

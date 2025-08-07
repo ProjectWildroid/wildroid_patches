@@ -1,4 +1,4 @@
-From a320d5c8ec76fdc3cecf27a0263bdb2273a52ee5 Mon Sep 17 00:00:00 2001
+From 0cefda20dfc92a8ec9ef22caae8ae8e76cb0b57d Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 5 Aug 2025 04:47:14 +0800
 Subject: [PATCH 28/30] Wire up dmabuf_driver and gbm_mesa_driver

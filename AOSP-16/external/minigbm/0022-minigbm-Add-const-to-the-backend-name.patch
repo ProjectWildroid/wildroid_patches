@@ -1,4 +1,4 @@
-From 6388bed4b1802526d45daa78791c03b3b0b8090b Mon Sep 17 00:00:00 2001
+From b993fd9419b1b7c0381df86525be3876ec223581 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Wed, 23 Jun 2021 17:12:00 +0300
 Subject: [PATCH 22/30] minigbm: Add const to the backend::name

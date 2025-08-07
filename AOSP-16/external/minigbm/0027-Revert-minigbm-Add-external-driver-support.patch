@@ -1,4 +1,4 @@
-From ef747438f54dcafb93db65a350baf954fd38b724 Mon Sep 17 00:00:00 2001
+From f7e7945699a1f0ceaf9d3748b4bf87cd269ab093 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 5 Aug 2025 04:20:09 +0800
 Subject: [PATCH 27/30] Revert "minigbm: Add external driver support"

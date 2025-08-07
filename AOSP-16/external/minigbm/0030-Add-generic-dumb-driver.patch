@@ -1,4 +1,4 @@
-From bee7aba2546119ae57c40c3696512e00bd030ff9 Mon Sep 17 00:00:00 2001
+From 487ecdd3cbd3144a862187cd5832a4ec408fc634 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 5 Aug 2025 16:57:14 +0800
 Subject: [PATCH 30/30] Add generic dumb driver

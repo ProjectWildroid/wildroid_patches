@@ -1,4 +1,4 @@
-From ec7e48d54ecf2a830ea6b65aaa177f09ce2a6d98 Mon Sep 17 00:00:00 2001
+From b864f78946dbedde440aeeff378d38262e84b148 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Thu, 22 Dec 2022 13:31:15 +0200
 Subject: [PATCH 19/30] minigbm: Allow using single path for testing and
