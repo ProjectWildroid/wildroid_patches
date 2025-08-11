@@ -1,4 +1,4 @@
-From 8aa22032f6ae8b2eb4e28a080e8a213edf93cf62 Mon Sep 17 00:00:00 2001
+From e0ec889e6ed3fa2fd43fca2bda385884647517da Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
 Date: Sat, 16 Jul 2022 20:10:52 +0000
 Subject: [PATCH 02/27] liblp: Allow to flash on bigger block device

@@ -1,4 +1,4 @@
-From a4db529fb1cfe60de9b253c9ded2ebc68791ec07 Mon Sep 17 00:00:00 2001
+From 91876b8e44a343a0361f4a39219044eb968db48a Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 23 Jul 2025 04:31:54 +0800
 Subject: [PATCH 22/27] init: Make first stage init call the real

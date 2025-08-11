@@ -1,4 +1,4 @@
-From 366142d19069499fe7164be4d43bc9749a88cad1 Mon Sep 17 00:00:00 2001
+From b08b840169413cab24a4d69dd4d7f7349d5c03ff Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
 Date: Tue, 4 Oct 2022 12:41:16 +0000
 Subject: [PATCH 01/27] first_stage_mount: Skip dm-verity setup if AVB is not

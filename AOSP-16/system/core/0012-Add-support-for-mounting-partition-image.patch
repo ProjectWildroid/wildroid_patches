@@ -1,4 +1,4 @@
-From 3c5e8a289f95e012572059f09a74c5760b8f3b58 Mon Sep 17 00:00:00 2001
+From 0937954f14d303c7d4569e48b31161d6a48391d2 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 17:57:10 +0800
 Subject: [PATCH 12/27] Add support for mounting partition image

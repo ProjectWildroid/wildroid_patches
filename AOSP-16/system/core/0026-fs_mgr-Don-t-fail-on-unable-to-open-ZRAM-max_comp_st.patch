@@ -1,4 +1,4 @@
-From fe9c98b8d260f517e478b032574928155730abac Mon Sep 17 00:00:00 2001
+From f2e6fa573d1417365e1f859917dd76795300e191 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 2 Aug 2025 16:32:00 +0000
 Subject: [PATCH 26/27] fs_mgr: Don't fail on unable to open ZRAM

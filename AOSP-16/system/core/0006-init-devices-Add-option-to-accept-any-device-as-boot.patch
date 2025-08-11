@@ -1,4 +1,4 @@
-From 400095b3befd68d6b2e57bf29c76592bc3aefd82 Mon Sep 17 00:00:00 2001
+From 744a0b152e48501cb32f913560a7331afd3325c2 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 2 Jan 2024 07:34:14 +0800
 Subject: [PATCH 06/27] init: devices: Add option to accept any device as boot

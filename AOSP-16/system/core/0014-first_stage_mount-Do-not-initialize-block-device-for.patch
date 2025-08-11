@@ -1,4 +1,4 @@
-From f3101ae62518216c8c7de34b924d9c217d47c985 Mon Sep 17 00:00:00 2001
+From f7b18d24b280630bff1a699652f256f2b30c7771 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Fri, 18 Jul 2025 21:07:35 +0800
 Subject: [PATCH 14/27] first_stage_mount: Do not initialize block device for

@@ -1,4 +1,4 @@
-From 2a729918a61d4fc6f0252773410940ca6fcfa8cd Mon Sep 17 00:00:00 2001
+From 064389722ead1ebe0f7952e39bb2ab2dbea65812 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Sat, 5 Jul 2025 16:39:56 +0800
 Subject: [PATCH 09/27] fs_mgr: Add apfs to supported fs list
