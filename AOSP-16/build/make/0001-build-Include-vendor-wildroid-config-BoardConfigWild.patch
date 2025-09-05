@@ -1,4 +1,4 @@
-From 74a6e24da688ef7ec90b6befa3263e9642da8c5d Mon Sep 17 00:00:00 2001
+From 1a7493e383b477021cf9a24f4a791e62be89b3a5 Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Thu, 17 Jul 2025 00:11:12 +0800
 Subject: [PATCH 1/9] build: Include
@@ -10,7 +10,7 @@ Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
  1 file changed, 2 insertions(+)
 
 diff --git a/core/config.mk b/core/config.mk
-index 1474d0fc2c..23064441eb 100644
+index 38f3f5b802..b843b3899d 100644
 --- a/core/config.mk
 +++ b/core/config.mk
 @@ -471,6 +471,8 @@ endif

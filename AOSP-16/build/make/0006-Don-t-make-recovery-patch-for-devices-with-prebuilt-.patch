@@ -1,4 +1,4 @@
-From b603ed1cd35c66fa904583aeaec57193bd476807 Mon Sep 17 00:00:00 2001
+From 2a02420500603665a6f8126cfc013f1d263bd951 Mon Sep 17 00:00:00 2001
 From: TheScarastic <warabhishek@gmail.com>
 Date: Sat, 12 Sep 2020 17:28:03 +0000
 Subject: [PATCH 6/9] Don't make recovery patch for devices with prebuilt

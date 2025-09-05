@@ -1,4 +1,4 @@
-From ed6da967de9e518cda7184e6036b07631dd4f20a Mon Sep 17 00:00:00 2001
+From 4769866f0087e6cd7b3f2f9698e364f4879f608e Mon Sep 17 00:00:00 2001
 From: Steve Kondik <shade@chemlab.org>
 Date: Wed, 21 Apr 2010 11:39:48 -0400
 Subject: [PATCH 9/9] Allow override of device asserts, including multi-device
@@ -44,7 +44,7 @@ index 6a95310562..04c0aea3f7 100644
  	$(hide) sort -o $@ $@
  
 diff --git a/tools/releasetools/common.py b/tools/releasetools/common.py
-index f3cda03800..ec0b511d2e 100644
+index 0cafc6e29c..a591161290 100644
 --- a/tools/releasetools/common.py
 +++ b/tools/releasetools/common.py
 @@ -445,7 +445,7 @@ class BuildInfo(object):

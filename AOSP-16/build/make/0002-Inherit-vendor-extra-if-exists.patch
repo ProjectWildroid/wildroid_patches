@@ -1,4 +1,4 @@
-From ce36c9784287670cf468c8dba997d0622e3a5dbd Mon Sep 17 00:00:00 2001
+From b38bbf36ac5e0cece965259ff6ee8c2d33d04a2e Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Wed, 16 Jul 2025 21:37:38 +0000
 Subject: [PATCH 2/9] Inherit vendor/extra if exists

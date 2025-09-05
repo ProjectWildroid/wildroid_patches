@@ -1,4 +1,4 @@
-From 99f1576eee0a23a6978ce9eb67072eb8cefc4038 Mon Sep 17 00:00:00 2001
+From ff3d0f23829e484d9bdc65f4bf9e370faa811328 Mon Sep 17 00:00:00 2001
 From: dianlujitao <dianlujitao@lineageos.org>
 Date: Sat, 12 Sep 2020 13:48:26 +0800
 Subject: [PATCH 5/9] Move recovery-from-boot.p from /system to /vendor
@@ -14,7 +14,7 @@ Change-Id: Ib7822a9bd5b1a2ab7e762e9fb35dbb22291a3a76
  2 files changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/tools/releasetools/common.py b/tools/releasetools/common.py
-index 10d6816ae2..96f2903c9b 100644
+index 3fc08c668e..875fc66f4d 100644
 --- a/tools/releasetools/common.py
 +++ b/tools/releasetools/common.py
 @@ -3816,12 +3816,10 @@ def MakeRecoveryPatch(input_dir, output_sink, recovery_img, boot_img,
@@ -30,7 +30,7 @@ index 10d6816ae2..96f2903c9b 100644
  
    if full_recovery_image:
      output_sink(recovery_img_path, recovery_img.data)
-@@ -3905,11 +3903,7 @@ fi
+@@ -3903,11 +3901,7 @@ fi
  
    # The install script location moved from /system/etc to /system/bin in the L
    # release. In the R release it is in VENDOR/bin or SYSTEM/vendor/bin.

@@ -1,4 +1,4 @@
-From 41adc2b6cb4e4af9e118db1216f8af8c881fa0a0 Mon Sep 17 00:00:00 2001
+From 384f8bd2addd9b785fbdb14805359a49493058aa Mon Sep 17 00:00:00 2001
 From: Ricardo Cerqueira <ricardo@cyngn.com>
 Date: Wed, 5 Nov 2014 21:30:23 +0000
 Subject: [PATCH 8/9] Add BOARD_CUSTOM_BOOTIMG_MK support
