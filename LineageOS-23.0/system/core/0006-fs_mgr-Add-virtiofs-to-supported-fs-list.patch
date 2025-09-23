@@ -1,0 +1,26 @@
+From 2aa03ceb511bc5aa73c2a11579b5c09f32b70c04 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Fri, 18 Jul 2025 05:46:29 +0800
+Subject: [PATCH 06/21] fs_mgr: Add virtiofs to supported fs list
+
+Change-Id: I25986ee90782ef75f284c4f628ed62989f6277cb
+---
+ fs_mgr/fs_mgr_roots.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs_mgr/fs_mgr_roots.cpp b/fs_mgr/fs_mgr_roots.cpp
+index 52df5e7d1..e9b8219dd 100644
+--- a/fs_mgr/fs_mgr_roots.cpp
++++ b/fs_mgr/fs_mgr_roots.cpp
+@@ -121,7 +121,7 @@ bool TryPathMount(FstabEntry* rec, const std::string& mount_pt) {
+     }
+ 
+     static const std::vector<std::string> supported_fs{"ext4", "squashfs", "vfat", "exfat", "f2fs",
+-                                                       "erofs", "none", "apfs"};
++                                                       "erofs", "none", "apfs", "virtiofs"};
+     if (std::find(supported_fs.begin(), supported_fs.end(), rec->fs_type) == supported_fs.end()) {
+ #if defined(__ANDROID_RECOVERY__)
+         auto supported_fs_from_prop =
+-- 
+2.47.3
+

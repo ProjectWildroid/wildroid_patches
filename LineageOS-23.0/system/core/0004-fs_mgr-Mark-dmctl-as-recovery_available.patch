@@ -1,0 +1,25 @@
+From ba7ed319c9bd510b26cda7bcbf2102e10b809bd2 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 5 Jul 2025 06:15:05 +0800
+Subject: [PATCH 04/21] fs_mgr: Mark dmctl as recovery_available
+
+Change-Id: I833a16c01ac965e7c7dad022cac7b4d95a75deb3
+---
+ fs_mgr/tools/Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs_mgr/tools/Android.bp b/fs_mgr/tools/Android.bp
+index 462777d13..c13b9cd27 100644
+--- a/fs_mgr/tools/Android.bp
++++ b/fs_mgr/tools/Android.bp
+@@ -32,6 +32,7 @@ cc_binary {
+     ],
+ 
+     cflags: ["-Werror"],
++    recovery_available: true,
+ }
+ 
+ cc_binary {
+-- 
+2.47.3
+

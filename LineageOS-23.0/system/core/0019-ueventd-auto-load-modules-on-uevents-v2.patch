@@ -1,0 +1,230 @@
+From 5a00ed0a6c8925028cead693808dc00e5be5d31f Mon Sep 17 00:00:00 2001
+From: Michael Goffioul <michael.goffioul@gmail.com>
+Date: Thu, 8 Sep 2022 15:03:03 +0200
+Subject: [PATCH 19/21] ueventd: auto load modules on uevents (v2)
+
+Update 06/10/2023: With the new commit e067e96da26111e446c5deadefd839a6451dd6d1
+on Android 14, we don't have to edit toolbox/modprobe.cpp anymore
+
+[cafebabe: Cleanup, and modules should only be /vendor/lib/modules/*.ko]
+
+Change-Id: Iff458d64a69c4a281cbb3537f25a669baea7f4af
+---
+ init/modalias_handler.cpp               | 13 +++++++++++-
+ init/modalias_handler.h                 |  4 ++++
+ init/uevent_handler.h                   |  2 ++
+ init/ueventd.cpp                        | 14 +++++++++++++
+ libmodprobe/include/modprobe/modprobe.h |  4 ++++
+ libmodprobe/libmodprobe.cpp             | 27 +++++++++++++++++++++++--
+ rootdir/init.rc                         |  5 -----
+ rootdir/ueventd.rc                      |  1 +
+ 8 files changed, 62 insertions(+), 8 deletions(-)
+
+diff --git a/init/modalias_handler.cpp b/init/modalias_handler.cpp
+index 07b05d8b4..6a2704f80 100644
+--- a/init/modalias_handler.cpp
++++ b/init/modalias_handler.cpp
+@@ -25,12 +25,23 @@ namespace android {
+ namespace init {
+ 
+ ModaliasHandler::ModaliasHandler(const std::vector<std::string>& base_paths)
+-    : modprobe_(base_paths) {}
++    : modprobe_(base_paths) {
++    modprobe_.EnableDeferred(true);
++}
+ 
+ void ModaliasHandler::HandleUevent(const Uevent& uevent) {
+     if (uevent.modalias.empty()) return;
+     modprobe_.LoadWithAliases(uevent.modalias, true);
+ }
+ 
++bool ModaliasHandler::IsUeventDeferred(const Uevent& uevent) {
++    if (!uevent.modalias.empty() && modprobe_.IsAliasDeferred(uevent.modalias)) return true;
++    return false;
++}
++
++void ModaliasHandler::ColdbootDone() {
++    modprobe_.EnableDeferred(false);
++}
++
+ }  // namespace init
+ }  // namespace android
+diff --git a/init/modalias_handler.h b/init/modalias_handler.h
+index ce89a059f..02a99c8dc 100644
+--- a/init/modalias_handler.h
++++ b/init/modalias_handler.h
+@@ -34,6 +34,10 @@ class ModaliasHandler : public UeventHandler {
+ 
+     void HandleUevent(const Uevent& uevent) override;
+ 
++    bool IsUeventDeferred(const Uevent& uevent) override;
++
++    void ColdbootDone() override;
++
+   private:
+     Modprobe modprobe_;
+ };
+diff --git a/init/uevent_handler.h b/init/uevent_handler.h
+index 75d19902e..4967b7d5f 100644
+--- a/init/uevent_handler.h
++++ b/init/uevent_handler.h
+@@ -27,6 +27,8 @@ class UeventHandler {
+ 
+     virtual void HandleUevent(const Uevent& uevent) = 0;
+ 
++    virtual bool IsUeventDeferred(const Uevent& uevent) { return false; }
++
+     virtual void ColdbootDone() {}
+ };
+ 
+diff --git a/init/ueventd.cpp b/init/ueventd.cpp
+index cb6b851d6..893bb5233 100644
+--- a/init/ueventd.cpp
++++ b/init/ueventd.cpp
+@@ -140,6 +140,7 @@ class ColdBoot {
+     bool enable_parallel_restorecon_;
+ 
+     std::vector<Uevent> uevent_queue_;
++    std::vector<Uevent> uevent_deferred_queue_;
+ 
+     std::set<pid_t> subprocess_pids_;
+ 
+@@ -209,6 +210,13 @@ void ColdBoot::GenerateRestoreCon(const std::string& directory) {
+ 
+ void ColdBoot::RegenerateUevents() {
+     uevent_listener_.RegenerateUevents([this](const Uevent& uevent) {
++        for (auto& uevent_handler : uevent_handlers_) {
++            if (uevent_handler->IsUeventDeferred(uevent)) {
++                LOG(INFO) << "deferring uevent(action=" << uevent.action << ", modalias=" << uevent.modalias << ")";
++                uevent_deferred_queue_.emplace_back(uevent);
++                return ListenerAction::kContinue;
++            }
++        }
+         uevent_queue_.emplace_back(uevent);
+         return ListenerAction::kContinue;
+     });
+@@ -292,6 +300,12 @@ void ColdBoot::Run() {
+ 
+     WaitForSubProcesses();
+ 
++    for (auto& uevent : uevent_deferred_queue_) {
++        for (auto& uevent_handler : uevent_handlers_) {
++            uevent_handler->HandleUevent(uevent);
++        }
++    }
++
+     android::base::SetProperty(kColdBootDoneProp, "true");
+     LOG(INFO) << "Coldboot took " << cold_boot_timer.duration().count() / 1000.0f << " seconds";
+ }
+diff --git a/libmodprobe/include/modprobe/modprobe.h b/libmodprobe/include/modprobe/modprobe.h
+index d33e17ddd..a5432b18e 100644
+--- a/libmodprobe/include/modprobe/modprobe.h
++++ b/libmodprobe/include/modprobe/modprobe.h
+@@ -43,6 +43,8 @@ class Modprobe {
+     void ResetModuleCount() { module_count_ = 0; }
+     int GetModuleCount() { return module_count_; }
+     bool IsBlocklisted(const std::string& module_name);
++    bool IsAliasDeferred(const std::string& alias_name);
++    void EnableDeferred(bool enable);
+ 
+   private:
+     std::string MakeCanonical(const std::string& module_path);
+@@ -72,9 +74,11 @@ class Modprobe {
+     std::vector<std::string> module_load_;
+     std::unordered_map<std::string, std::string> module_options_;
+     std::set<std::string> module_blocklist_;
++    std::vector<std::string> module_deferred_aliases_;
+     std::mutex module_loaded_lock_;
+     std::unordered_set<std::string> module_loaded_;
+     std::unordered_set<std::string> module_loaded_paths_;
+     int module_count_ = 0;
+     bool blocklist_enabled = false;
++    bool deferred_enabled = false;
+ };
+diff --git a/libmodprobe/libmodprobe.cpp b/libmodprobe/libmodprobe.cpp
+index bdd114c4b..049d4032c 100644
+--- a/libmodprobe/libmodprobe.cpp
++++ b/libmodprobe/libmodprobe.cpp
+@@ -262,7 +262,7 @@ bool Modprobe::ParseBlocklistCallback(const std::vector<std::string>& args) {
+     auto it = args.begin();
+     const std::string& type = *it++;
+ 
+-    if (type != "blocklist") {
++    if (type != "blocklist" && type != "deferred") {
+         LOG(ERROR) << "non-blocklist line encountered in modules.blocklist";
+         return false;
+     }
+@@ -278,7 +278,16 @@ bool Modprobe::ParseBlocklistCallback(const std::vector<std::string>& args) {
+     if (canonical_name.empty()) {
+         return false;
+     }
+-    this->module_blocklist_.emplace(canonical_name);
++
++    if (type == "blocklist") {
++        this->module_blocklist_.emplace(canonical_name);
++    } else if (type == "deferred") {
++        for (auto& [alias, aliased_module]: this->module_aliases_) {
++            if (MakeCanonical(aliased_module) == canonical_name) {
++                this->module_deferred_aliases_.push_back(alias);
++            }
++        }
++    }
+ 
+     return true;
+ }
+@@ -404,6 +413,10 @@ Modprobe::Modprobe(const std::vector<std::string>& base_paths, const std::string
+     ParseKernelCmdlineOptions();
+ }
+ 
++void Modprobe::EnableDeferred(bool enable) {
++    deferred_enabled = enable;
++}
++
+ std::vector<std::string> Modprobe::GetDependencies(const std::string& module) {
+     auto it = module_deps_.find(module);
+     if (it == module_deps_.end()) {
+@@ -673,3 +686,13 @@ bool Modprobe::GetAllDependencies(const std::string& module,
+     }
+     return true;
+ }
++
++bool Modprobe::IsAliasDeferred(const std::string& alias_name) {
++    if (deferred_enabled) {
++        for (auto& deferred_alias: module_deferred_aliases_) {
++            if (fnmatch(deferred_alias.c_str(), alias_name.c_str(), 0) != 0) continue;
++            return true;
++        }
++    }
++    return false;
++}
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index cca1f4a4c..5e44d46a6 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -16,11 +16,6 @@ on early-init-begin
+     # Disable sysrq from keyboard
+     write /proc/sys/kernel/sysrq 0
+ 
+-    # Android doesn't need kernel module autoloading, and it causes SELinux
+-    # denials.  So disable it by setting modprobe to the empty string.  Note: to
+-    # explicitly set a sysctl to an empty string, a trailing newline is needed.
+-    write /proc/sys/kernel/modprobe \n
+-
+     # Set the security context of /adb_keys if present.
+     restorecon /adb_keys
+ 
+diff --git a/rootdir/ueventd.rc b/rootdir/ueventd.rc
+index 3927501a4..2530d5fce 100644
+--- a/rootdir/ueventd.rc
++++ b/rootdir/ueventd.rc
+@@ -2,6 +2,7 @@ import /vendor/etc/ueventd.rc
+ import /odm/etc/ueventd.rc
+ 
+ firmware_directories /etc/firmware/ /odm/firmware/ /vendor/firmware/ /firmware/image/
++modalias_handling enabled
+ uevent_socket_rcvbuf_size 16M
+ 
+ subsystem graphics
+-- 
+2.47.3
+

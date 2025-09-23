@@ -1,0 +1,50 @@
+From 78a754531b9a980ec084d437d8f57a7991b7f92e Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sun, 20 Jul 2025 20:30:36 +0800
+Subject: [PATCH 15/21] HACK: Allow devices insert custom init.rc actions in
+ the middle of early-init
+
+Change-Id: I85c92c27925e8de4fc9c8cde174e47fd24a88344
+---
+ init/init.cpp   | 3 +++
+ rootdir/init.rc | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/init/init.cpp b/init/init.cpp
+index 54d6dcf59..23492b82b 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -1119,6 +1119,9 @@ int SecondStageMain(int argc, char** argv) {
+     am.QueueBuiltinAction(SetupCgroupsAction, "SetupCgroups");
+     am.QueueBuiltinAction(SetKptrRestrictAction, "SetKptrRestrict");
+     am.QueueBuiltinAction(TestPerfEventSelinuxAction, "TestPerfEventSelinux");
++    am.QueueEventTrigger("early-init-begin");
++    am.QueueEventTrigger("early-init-middle");
++    am.QueueEventTrigger("early-init-end");
+     am.QueueEventTrigger("early-init");
+     am.QueueBuiltinAction(ConnectEarlyStageSnapuserdAction, "ConnectEarlyStageSnapuserd");
+ 
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index cf198cb06..a823f0ed4 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -12,7 +12,7 @@ import /system/etc/init/hw/init.usb.configfs.rc
+ import /system/etc/init/hw/init.${ro.zygote}.rc
+ 
+ # Cgroups are mounted right before early-init using list from /etc/cgroups.json
+-on early-init
++on early-init-begin
+     # Disable sysrq from keyboard
+     write /proc/sys/kernel/sysrq 0
+ 
+@@ -75,6 +75,7 @@ on early-init
+     # Mount tracefs (with GID=AID_READTRACEFS)
+     mount tracefs tracefs /sys/kernel/tracing gid=3012
+ 
++on early-init-end
+     # Run apexd-bootstrap so that APEXes that provide critical libraries
+     # become available. Note that this is executed as exec_start to ensure that
+     # the libraries are available to the processes started after this statement.
+-- 
+2.47.3
+

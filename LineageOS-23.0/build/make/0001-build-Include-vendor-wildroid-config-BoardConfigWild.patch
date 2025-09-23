@@ -1,0 +1,26 @@
+From 2ac43986e017c4be4c7a725fc7e596088f6d9082 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 17 Jul 2025 00:11:12 +0800
+Subject: [PATCH] build: Include vendor/wildroid/config/BoardConfigWildroid.mk
+
+Change-Id: Ia2d091fe962bdf9d685c046c58d5d98d74c880c4
+---
+ core/config.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/core/config.mk b/core/config.mk
+index 977feeed9f..ef7d9bf2d8 100644
+--- a/core/config.mk
++++ b/core/config.mk
+@@ -471,6 +471,8 @@ endif
+ # See envsetup.mk for a description of SCAN_EXCLUDE_DIRS
+ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
+ 
++include vendor/wildroid/config/BoardConfigWildroid.mk
++
+ ifneq ($(LINEAGE_BUILD),)
+ include vendor/lineage/config/BoardConfigLineage.mk
+ endif
+-- 
+2.47.3
+
