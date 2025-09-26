@@ -1,0 +1,26 @@
+From 0d5a0b3cc8e6c15c2ebc1fce64ab24284a5fe6a1 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 15 Jul 2025 20:39:11 +0800
+Subject: [PATCH 1/4] sepolicy: private: Label
+ `ro.surface_flinger.native_window_buffers_format`
+
+Change-Id: I0f376ba9c5f47f27dd921e41ab847620bcdfea8f
+---
+ private/property_contexts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/private/property_contexts b/private/property_contexts
+index e00fa3a7e..d01c31a86 100644
+--- a/private/property_contexts
++++ b/private/property_contexts
+@@ -1516,6 +1516,7 @@ ro.surface_flinger.ignore_hdr_camera_layers               u:object_r:surfaceflin
+ ro.surface_flinger.clear_slots_with_set_layer_buffer      u:object_r:surfaceflinger_prop:s0 exact bool
+ ro.surface_flinger.prime_shader_cache.ultrahdr            u:object_r:surfaceflinger_prop:s0 exact bool
+ ro.surface_flinger.game_default_frame_rate_override       u:object_r:surfaceflinger_prop:s0 exact int
++ro.surface_flinger.native_window_buffers_format           u:object_r:surfaceflinger_prop:s0 exact int
+ 
+ ro.sf.disable_triple_buffer u:object_r:surfaceflinger_prop:s0 exact bool
+ ro.sf.lcd_density           u:object_r:surfaceflinger_prop:s0 exact int
+-- 
+2.39.5
+
