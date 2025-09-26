@@ -1,8 +1,7 @@
-From c0b4e51e5c3cb0db2383705d92c62ca389319751 Mon Sep 17 00:00:00 2001
+From c60b784bdfc4368c8e9fd2f9f233eb74f05453be Mon Sep 17 00:00:00 2001
 From: Yumi Yukimura <me.cafebabe@gmail.com>
 Date: Tue, 5 Aug 2025 03:50:41 +0800
-Subject: [PATCH 13/30] msm: Force disable UBWC with
- `vendor.minigbm.avoid_ubwc` prop
+Subject: [PATCH] msm: Force disable UBWC with `vendor.minigbm.avoid_ubwc` prop
 
 Change-Id: I67cf8eda41358a168a414394b1c8208e974ecec5
 ---
@@ -33,5 +32,5 @@ index ee585c7..6a132fb 100644
  	/* waffle is buggy and, requests a renderable buffer (which on qcom platforms, we
  	 * want to use UBWC), and then passes it to the kernel discarding the modifier.
 -- 
-2.39.5
+2.47.3
 
