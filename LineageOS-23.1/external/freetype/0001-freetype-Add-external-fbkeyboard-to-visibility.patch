@@ -1,0 +1,25 @@
+From f08434d83c5c33303369604e940d3c03a38961c9 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 11 Dec 2025 16:02:50 +0800
+Subject: [PATCH] freetype: Add `//external/fbkeyboard` to visibility
+
+Change-Id: Id530b467875ba117b8e9bc096c3d9af31848a72d
+---
+ Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Android.bp b/Android.bp
+index ee1b70430..332f2485c 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -13,6 +13,7 @@ package {
+         "//device/google/cuttlefish/host/libs/screen_connector",
+         "//external/igt-gpu-tools",
+         "//external/cairo",
++        "//external/fbkeyboard",
+         "//external/pdfium",
+         "//external/skia",
+         "//frameworks/base/core/jni",
+-- 
+2.47.3
+
