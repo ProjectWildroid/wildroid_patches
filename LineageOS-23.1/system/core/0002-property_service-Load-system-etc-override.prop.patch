@@ -1,0 +1,41 @@
+From 25f3adbda5c4884685db89ed57c6ac771d48474b Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sat, 2 Aug 2025 18:29:21 +0000
+Subject: [PATCH 02/21] property_service: Load /system/etc/override.prop
+
+Change-Id: I355b23b433c50b38d8e14b66adddedd3561f8628
+---
+ init/property_service.cpp | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index ced2c72e5..0ec7190e7 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -76,6 +76,8 @@
+ #include "util.h"
+ #include "vendor_init.h"
+ 
++static constexpr char kOverrideProp[] = "/system/etc/override.prop";
++
+ static constexpr char APPCOMPAT_OVERRIDE_PROP_FOLDERNAME[] =
+         "/dev/__properties__/appcompat_override";
+ static constexpr char APPCOMPAT_OVERRIDE_PROP_TREE_FILE[] =
+@@ -1235,6 +1237,14 @@ void PropertyLoadBootDefaults() {
+         }
+     }
+ 
++    if (access(kOverrideProp, R_OK) == 0) {
++        LOG(INFO) << "Loading " << kOverrideProp;
++        if (auto res = load_properties_from_file(kOverrideProp, nullptr, &properties);
++            !res.ok()) {
++            LOG(WARNING) << res.error();
++        }
++    }
++
+     for (const auto& [name, value] : properties) {
+         std::string error;
+         if (PropertySetNoSocket(name, value, &error) != PROP_SUCCESS) {
+-- 
+2.47.3
+
