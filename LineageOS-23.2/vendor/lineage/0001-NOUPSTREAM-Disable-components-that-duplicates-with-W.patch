@@ -1,0 +1,57 @@
+From c321908f652511284febdd70282ce7d1ce739fce Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Thu, 17 Jul 2025 03:33:31 +0800
+Subject: [PATCH] NOUPSTREAM: Disable components that duplicates with Wildroid
+
+Change-Id:
+---
+ build/soong/mkdir/init.go    | 2 +-
+ build/tasks/kernel.mk        | 2 ++
+ config/BoardConfigLineage.mk | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/build/soong/mkdir/init.go b/build/soong/mkdir/init.go
+index 7826da62..168cc183 100644
+--- a/build/soong/mkdir/init.go
++++ b/build/soong/mkdir/init.go
+@@ -25,5 +25,5 @@ func init() {
+ }
+ 
+ func RegisterBuildComponents(ctx android.RegistrationContext) {
+-	ctx.RegisterModuleType("mkdir", MkdirFactory)
++	ctx.RegisterModuleType("mkdir_orig", MkdirFactory)
+ }
+diff --git a/build/tasks/kernel.mk b/build/tasks/kernel.mk
+index 62b3dfa5..a2e13adb 100644
+--- a/build/tasks/kernel.mk
++++ b/build/tasks/kernel.mk
+@@ -88,6 +88,7 @@
+ #   TARGET_KERNEL_PLATFORM_TARGET      = Optional, enables building an external kernel
+ #                                          platform tree, this specifies the base target name
+ 
++ifeq (0,1) # Disable this file to use the one from Wildroid instead
+ ifneq ($(TARGET_NO_KERNEL),true)
+ ifneq ($(TARGET_NO_KERNEL_OVERRIDE),true)
+ 
+@@ -750,3 +751,4 @@ dtbimage: $(INSTALLED_DTBIMAGE_TARGET)
+ 
+ endif # TARGET_NO_KERNEL_OVERRIDE
+ endif # TARGET_NO_KERNEL
++endif
+diff --git a/config/BoardConfigLineage.mk b/config/BoardConfigLineage.mk
+index 172d2966..f174b169 100644
+--- a/config/BoardConfigLineage.mk
++++ b/config/BoardConfigLineage.mk
+@@ -4,7 +4,8 @@
+ # Recovery
+ BOARD_USES_FULL_RECOVERY_IMAGE ?= true
+ 
+-include vendor/lineage/config/BoardConfigKernel.mk
++# Disable this file to use the one from Wildroid instead
++#include vendor/lineage/config/BoardConfigKernel.mk
+ 
+ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+     include hardware/qcom-caf/common/BoardConfigQcom.mk
+-- 
+2.47.3
+
